@@ -90,6 +90,20 @@ og benken blir sitteplass under vinduet-følelse. Men proporsjonene blir
 dere mister en tredjedel av skapvolumet. Velg på looken (Render-fanen viser
 begge) og på om dere faktisk vil sitte der.
 
+## V8 · METOD + BBB System — *«finnes det en bedre hylle?» — dette er svaret*
+
+Markedssøk 2026-10-03 etter noe som slår kappet BILLY: **ingenting slår den på
+pris** (~4 300 kr for overdelen), men **BBB System (bokhyller.no, Oslo)** slår
+den på *passform*: heltre furu, **ekte 20 cm dybde (= skissen), 166 cm høyde
+helt uten kapping** (2× 83-seksjoner stables). ~8 800 kr for 4×80-fag + endesider
+→ V8 totalt **18 481 kr**. Må males (sperregrunning mot kvister); hyllelast og
+frakt er upublisert — spør post@bbbsystem.no. Øvrige funn: **Tylko** bekreftet
+levering til Norge (toll inkl.), kan lages i ÉN del 340×163×24 i fabrikkbeige,
+men estimert 30–36 000 kr; Pickawood ~65k+; Regalraum/deinSchrank/form.bar
+leverer ikke til Norge; Noremax (lakkert MDF i valgfri NCS-farge) kun på tilbud.
+
+![V8 render](screenshots/v8-bbb-render.png)
+
 ## Anbefaling
 
 **V3 (BILLY)** hvis 28 cm dybde går klar av downlights — billigst, sterkest

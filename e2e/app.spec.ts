@@ -11,6 +11,7 @@ const DESIGNS = [
   "v5-string",
   "v6-lavbenk-billy",
   "v7-lavbenk-bohus",
+  "v8-bbb",
 ];
 
 for (const id of DESIGNS) {

@@ -31,6 +31,9 @@ Se `docs/variants.md` for full sammenlikning med tall, eller «Sammenlikn alle»
 | V5 | String-system vegghengt | 200 | ~26 800 kr |
 | V6 | **Lav benk (50.8)** + BILLY kappet til 185 | 280 | ~12 500 kr |
 | V7 | **Lav benk (50.8)** + Bohus kappet til 185 | 267 | ~15 800 kr |
+| V8 | BBB System heltre (bokhyller.no) — 20 cm, null kapping | **200** | ~18 500 kr |
+
+V3 finnes i fire bredder (300/320/340/360) — 320 og 360 treffer modulmålene eksakt.
 
 Alle deler basen: METOD veggskap 3×80+60+40 på 8 cm ben (det finnes **ikke**
 60 cm høye METOD *benkeskap* — veggskap på ben er trikset), STENSUND-dører,

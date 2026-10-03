@@ -31,6 +31,8 @@ const EXPECTED: Record<string, { total: number; unverified: number }> = {
   "v5-string": { total: 26761, unverified: 6540 },
   "v6-lavbenk-billy": { total: 12540, unverified: 5820 },
   "v7-lavbenk-bohus": { total: 15836, unverified: 5820 },
+  // V8 = base 9671 + 8× BBB SR2-83 (8240) + 2 endesider (570) = 18481
+  "v8-bbb": { total: 18481, unverified: 6540 },
 };
 
 describe("cost audit (hand-computed expectations)", () => {

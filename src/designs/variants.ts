@@ -433,6 +433,55 @@ function v7(): Design {
   };
 }
 
+/** V8 — METOD base + BBB System (bokhyller.no): true 20 cm depth, NO cutting. */
+function v8(): Design {
+  const base = metodBase();
+  const rowW = 3200; // 4× 80 cm sections; end sides add ~20 mm (site note)
+  const sideFill = (TARGET_WIDTH - rowW) / 2; // 100
+  const rows: number[] = [UPPER_Y, UPPER_Y + 830];
+  const modules: Module[] = [
+    ...base.modules,
+    filler("fill-l", UNIT_X, UPPER_Y, 1660, sideFill, 200),
+    ...rows.map((y, r) =>
+      shelfRun(`bbb-row-${r}`, `BBB rad ${r + 1}: 4× SR2-83 (80×20×83)`, "bbb-sr2-83", {
+        x: UNIT_X + sideFill,
+        y,
+        w: rowW,
+        d: 200,
+        h: 830,
+        units: 4,
+        columns: 4,
+        shelves: 2,
+      }),
+    ),
+    filler("fill-r", UNIT_X + sideFill + rowW, UPPER_Y, 1660, sideFill, 200),
+    ...mdfFraming(200, UPPER_Y + 1660),
+  ];
+  return {
+    id: "v8-bbb",
+    name: "V8 · METOD + BBB 20 cm",
+    description:
+      "Research-funnet: BBB System (bokhyller.no, Oslo) — heltre furu, EKTE 20 cm dybde som skissen, 166 cm høyde uten ett eneste kutt (2× 83-seksjoner stables). Males (kvister krever sperregrunning).",
+    room: ROOM,
+    unitOffsetMm: UNIT_X,
+    targetWidthMm: TARGET_WIDTH,
+    modules,
+    extraParts: [
+      ...base.extraParts,
+      { itemId: "bbb-side-2-83", qty: 2, label: "Ekstra endesider" },
+    ],
+    siteNotes: [
+      ...SITE_NOTES,
+      "BBB-endesider legger ~+2 cm per rad: reell bredde ~322 cm, foring ~9 cm/side — BEKREFT modulmål med BBB før bestilling.",
+      "Stabel 70.8 + 166 = 236.8 cm — kun ~12 mm klaring til nedhakket (som V2). Kontrollmål!",
+      "Hyllelast og fraktkost er ikke publisert — spør post@bbbsystem.no (også om 98 cm-hylle for bredere fag).",
+      "Heltre furu males: sperregrunning mot kvistgjennomslag først.",
+    ],
+    verdict:
+      "Eneste kjøpte overdel med skissens eksakte 20 cm dybde OG null kapping. Norsk leverandør, heltre (skrubar, solid). ~4 500 kr dyrere enn BILLY-overdelen, 12 mm taklaring, og furu krever god grunning for malt finish. Reell utfordrer til V3 hvis dybden veier tyngst.",
+  };
+}
+
 export const DESIGNS: Design[] = [
   v1(),
   v2(),
@@ -441,4 +490,5 @@ export const DESIGNS: Design[] = [
   v5(),
   v6(),
   v7(),
+  v8(),
 ];
