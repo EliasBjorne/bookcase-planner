@@ -28,6 +28,12 @@ for (const id of DESIGNS) {
     await page.screenshot({ path: `docs/screenshots/${id}-deler.png`, fullPage: true });
   });
 
+  test(`${id}: presentational render draws`, async ({ page }) => {
+    await page.goto(`/#/${id}/render`);
+    await expect(page.getByTestId("render-svg")).toBeVisible();
+    await page.screenshot({ path: `docs/screenshots/${id}-render.png`, fullPage: true });
+  });
+
   test(`${id}: handoff exports exist`, async ({ page }) => {
     await page.goto(`/#/${id}/handoff`);
     await expect(page.locator("#shopping-text")).toContainText("HANDLELISTE");
@@ -43,6 +49,16 @@ test("comparison shows all five variants", async ({ page }) => {
     await expect(table).toContainText(id);
   }
   await page.screenshot({ path: "docs/screenshots/sammenlikn.png", fullPage: true });
+});
+
+test("width explorer lists 7 widths with exact-fit notes", async ({ page }) => {
+  await page.goto(`/#/v3-billy/bredder`);
+  const table = page.getByTestId("widths-table");
+  await expect(table).toBeVisible();
+  await expect(table.locator("tbody tr")).toHaveCount(7);
+  await expect(table).toContainText("360 cm");
+  await expect(table).toContainText("eksakt ✓");
+  await page.screenshot({ path: "docs/screenshots/bredder.png", fullPage: true });
 });
 
 test("no hard validation errors in any variant", async ({ page }) => {

@@ -77,6 +77,14 @@ table.compare td, table.compare th { max-width: 230px; }
 .verdict { font-size: 12.5px; color: #5c5345; }
 .note { color: #8a7f6e; font-size: 13px; max-width: 900px; }
 
+.render-wrap { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 6px; max-width: 1200px; }
+.render-wrap svg { width: 100%; height: auto; display: block; border-radius: 6px; }
+.render-actions { margin-bottom: 10px; }
+
+table.widths td { vertical-align: top; }
+table.widths .small { color: #8a7f6e; font-size: 12px; margin-top: 2px; }
+.fill-note { color: #7a5b0d; font-size: 12.5px; }
+
 pre {
   background: white;
   border: 1px solid var(--line);

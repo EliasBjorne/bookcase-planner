@@ -5,15 +5,19 @@ import { ThreeView } from "./views/three-view";
 import { partsHtml, violationsHtml } from "./views/parts";
 import { compareHtml } from "./views/compare";
 import { handoffHtml, wireHandoff } from "./views/handoff";
+import { renderHtml, wireRender } from "./views/render";
+import { widthsHtml } from "./views/widths";
 
-type ViewId = "3d" | "tegning" | "deler" | "handoff" | "sammenlikn";
+type ViewId = "3d" | "render" | "tegning" | "deler" | "handoff" | "sammenlikn" | "bredder";
 
 const VIEWS: { id: ViewId; label: string }[] = [
   { id: "3d", label: "3D" },
+  { id: "render", label: "Render" },
   { id: "tegning", label: "Tegninger" },
   { id: "deler", label: "Deleliste" },
   { id: "handoff", label: "IKEA-overlevering" },
   { id: "sammenlikn", label: "Sammenlikn alle" },
+  { id: "bredder", label: "Bredder 300–360" },
 ];
 
 const content = document.getElementById("content")!;
@@ -35,16 +39,17 @@ function render(): void {
   const { designId, view } = parseHash();
   const design = DESIGNS.find((d) => d.id === designId)!;
 
+  const globalView = view === "sammenlikn" || view === "bredder";
   designNav.innerHTML = DESIGNS.map(
     (d) =>
-      `<a href="#/${d.id}/${view === "sammenlikn" ? "3d" : view}" class="${d.id === designId ? "active" : ""}" data-testid="nav-${d.id}">${d.name}</a>`,
+      `<a href="#/${d.id}/${globalView ? "3d" : view}" class="${d.id === designId && !globalView ? "active" : ""}" data-testid="nav-${d.id}">${d.name}</a>`,
   ).join("");
 
   viewNav.innerHTML = VIEWS.map(
     (v) => `<a href="#/${designId}/${v.id}" class="${v.id === view ? "active" : ""}" data-testid="view-${v.id}">${v.label}</a>`,
   ).join("");
 
-  violations.innerHTML = view === "sammenlikn" ? "" : violationsHtml(design);
+  violations.innerHTML = globalView ? "" : violationsHtml(design);
 
   threeView?.dispose();
   threeView = null;
@@ -78,8 +83,17 @@ function render(): void {
       wireHandoff(content, design);
       break;
     }
+    case "render": {
+      content.innerHTML = `${header}${renderHtml(design)}`;
+      wireRender(content, design);
+      break;
+    }
     case "sammenlikn": {
       content.innerHTML = compareHtml(DESIGNS);
+      break;
+    }
+    case "bredder": {
+      content.innerHTML = widthsHtml();
       break;
     }
   }

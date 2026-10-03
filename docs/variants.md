@@ -75,3 +75,17 @@ resultat av butikk-overdelene, men da bør man først se snekkerprisen på ren
 MDF-overdel — differansen er trolig liten.
 
 ![Sammenlikning](screenshots/sammenlikn.png)
+
+## Andre bredder (300–360 cm)
+
+Appens «Bredder 300–360»-fane regner ut beste modulkombinasjon per bredde
+(skjermbilde: `screenshots/bredder.png`). Høydepunkter: **320 og 360 cm treffer
+eksakt for både METOD-base og BILLY** (320 = 4×80; 360 = 4×80+40). Bohus-790
+passer best rundt 320–340; under 320 blir foringene store.
+
+## Innfesting
+
+Verifisert mot dokumenterte bygg i [fastening.md](fastening.md): sokkelboks +
+skinne for basen (veggskap skal ikke stå på ben alene), lommeskruer/klosser ned
+i platen, topplekt i stendere per skrog (veltesikring), naboskrog boltes.
+BILLY kappes fra TOPPEN så fabrikkbunnen bærer mot platen.

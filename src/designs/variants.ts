@@ -69,7 +69,7 @@ function v1(): Design {
         h: upperH,
         columns: 1,
         shelves: 4,
-        cutNote: "Kapp sider til 1650 mm, re-monter topp, kort inn bakplate. Erstatt/stiv av hyller med 18 mm MDF (orig. tåler kun 13 kg).",
+        cutNote: "Kapp ~380 mm av TOPPEN (fabrikkbunn står på platen), re-monter topplaten med kappet som borejigg, kort inn bakplate. Erstatt/stiv av hyller med 18 mm MDF (orig. tåler kun 13 kg — verifisert).",
       }),
     ),
     filler("fill-r", UNIT_X + sideFill + runW, UPPER_Y, upperH, sideFill, 267),
@@ -163,7 +163,7 @@ function v3(): Design {
         h: upperH,
         columns: 1,
         shelves: 4,
-        cutNote: "Kapp sider til 1650 mm fra topp (behold topphull), re-bor tappehull, kort inn bakplate. Fast hylle ryker — flytt den.",
+        cutNote: "Kapp 370 mm av TOPPEN (fabrikkbunn + sokkelkant blir stående på platen). Bruk kappet som borejigg for nye tapp-/kamlåshull til topplaten. Kort inn og re-spikre bakplaten tett etter diagonalmåling.",
       }),
     ),
     filler("fill-r", UNIT_X + sideFill + runW, UPPER_Y, upperH, sideFill, 280),
@@ -184,7 +184,9 @@ function v3(): Design {
     ],
     siteNotes: [
       ...SITE_NOTES,
-      "BILLY-kapping: kapp fra UNDERKANT så ferdigkant og topphull bevares; sokkelstykket utgår.",
+      "BILLY kappes fra TOPPEN — fabrikkbunnen bærer mot platen (dokumentert i flere bygg, se docs/fastening.md).",
+      "BILLY-gavler treffer ikke METOD-gavlene overalt (80-rytme over 80/60/40) — legg kloss/tverrlekt under platen der gavler lander mellom stammer.",
+      "Innfesting: lommeskruer/klosser ned i platen + feste i vegg i topp per skrog — full oppskrift i docs/fastening.md.",
       "Papirfolie: slip + heftgrunning før maling.",
     ],
     verdict:

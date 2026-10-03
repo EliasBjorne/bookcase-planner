@@ -134,7 +134,8 @@ export function filler(id: string, x: number, y: number, h: number, w: number, d
 export const SITE_NOTES = [
   "ALLE kappmål kontrollmåles på stedet — 3602/2380/220 er fra håndskisse.",
   "238 cm er til underkant nedhakk; sjekk at nedhakket er i vater før gesims kappes.",
-  "METOD veggskap har ikke benfester — installatør fester ben/bunnramme selv.",
+  "METOD veggskap er laget for å HENGE på skinne, ikke stå på ben. Anbefalt (fra dokumenterte bygg): heng på opphengsskinne OG bær på sokkelboks av kryssfiner/trelekt med bæring under gavlene — ikke IKEA-ben alene. Se docs/fastening.md.",
   "Downlights sitter ca. 30 cm fra vegg — sjekk avstand til overhyllenes forkant.",
-  "Målet 70.8 cm underskap-høyde (8 ben + 60 skrog + 2.8 plate) avviker 8 mm fra skissens 70 cm.",
+  "Målet 70.8 cm underskap-høyde (8 sokkel + 60 skrog + 2.8 plate) avviker 8 mm fra skissens 70 cm.",
+  "Hele overdelen SKAL forankres i vegg i topp (veltefare, ~190 kg per lastet seksjon) — se docs/fastening.md.",
 ];

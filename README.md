@@ -5,7 +5,12 @@ variant driver 3D-visning, målsatte front-/sidetegninger (SVG → PDF),
 handleliste med artikkelnumre og kappliste. Bygget fordi IKEAs to planleggere
 ikke kan sammenlikne METOD + BILLY/BESTÅ + ikke-IKEA-deler på ett sted.
 
-![V3 i 3D](docs/screenshots/v3-billy-3d.png)
+![V3 presentasjonsrender](docs/screenshots/v3-billy-render.png)
+
+Views per variant: 3D, presentasjonsrender (prosedural, deterministisk, PNG-eksport),
+målsatte tegninger, deleliste, IKEA-overlevering — pluss breddeutforsker 300–360 cm
+og variantsammenlikning. Innfesting er dokumentert mot virkelige bygg i
+[docs/fastening.md](docs/fastening.md).
 
 ## Veggen
 
