@@ -38,6 +38,19 @@ Alle «verifisert» = lest direkte fra kildens side den datoen.
   Lundia (furu, 30 cm, frakt fra Finland ubekreftet), Tylko (eksakt bredde
   konfigurerbar, pris/frakt ubekreftet), JYSK Gislinge (billigst, 6 kg/hylle).
 
+## Spike: programmatisk lagring til storage-planleggeren (drept 2026-10-03)
+
+Hypotese: dexf-save/VPC-tjenesten kunne kanskje opprette en delbar designkode
+(`…/besta/web/latest/no/no/#/u/{CODE}`) uten innlogging, siden API-nøklene
+ligger åpent i JS. Testet: settings-endepunktet svarer med full endepunktskart
+på den offentlige nøkkelen, men både
+`POST https://api.dexf.ikea.com/vpc/v1/configurations/retailunit/NO/locale/no-NO`
+og `POST https://api.dexf.ikea.com/save/v1/designs/retail-units/NO/locales/no-NO`
+svarer `"The API key you provided does not have access to the requested
+resource"`. Lagring krever altså en annen nøkkel/sesjon enn den publiserte.
+**Konklusjon: drept ved kill-gate.** Overlevering til IKEA skjer via den
+manuelle oppskriften i appens «IKEA-overlevering»-fane.
+
 ## Åpen kildekode-alternativer (forkastet)
 
 Sweet Home 3D (GUI-drevet, svake oppriss), blueprint-js/react-planner
