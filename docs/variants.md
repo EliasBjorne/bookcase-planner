@@ -1,4 +1,4 @@
-# De fem variantene — sammenlikning
+# Variantene — sammenlikning
 
 Generert fra plannerens datamodell 2026-10-03. Tall = kjøpte deler inkl. felles
 METOD-base (~9 700 kr, hvorav dører ~2 560 kr og benkeplate ~3 980 kr har
@@ -65,6 +65,30 @@ bare for String-delene).
 
 ![V5 3D](screenshots/v5-string-3d.png)
 ![V5 tegning](screenshots/v5-string-tegning.png)
+
+## V6 / V7 · Lav benk (livingetc-varianten) — *sittebenk i stedet for sideboard*
+
+Basen byttes til METOD veggskap **80×37×40**: sokkel 8 + skrog 40 + plate 2.8 =
+**50.8 cm sittebenk** (vindusbenk med puter). 4×80 + 10 cm foring per side —
+**alle gavler flukter med 80-overdelene**, så lasten går rett ned uten klossing.
+Det som endres mot V1/V3:
+
+| | V3 (høy, 70.8) | **V6 (lav, 50.8) + BILLY** | V1 (høy) | **V7 (lav) + Bohus** |
+|---|---|---|---|---|
+| Kjøpte deler | 13 971 kr | **12 540 kr** | 17 267 kr | **15 836 kr** |
+| Kapping av overdel | 37 cm av toppen | **17 cm** | 38 cm | **18 cm** |
+| Hyllenivåer | 5 | **6** | 5 | 6 |
+| Lukket oppbevaring | 60 cm høyt | **40 cm (−33 %)** | 60 | 40 |
+| Dører | STENSUND shaker | **VEDDINGE glatt** — shaker finnes IKKE i 40-høyde (verifisert: ingen STENSUND/BODBYN 40×40). Shaker-look = pålimte MDF-lister | shaker | glatt |
+| Gavlflukt base↔overdel | delvis (80/60/40 mot 80) | **perfekt** | delvis | nesten (79 mot 80) |
+
+![V6 render](screenshots/v6-lavbenk-billy-render.png)
+
+**Ærlig vurdering:** V6 er billigst og byggeteknisk enklest/tryggest av alle,
+og benken blir sitteplass under vinduet-følelse. Men proporsjonene blir
+«bibliotek», ikke referansebildets sideboard-tyngde, dørene blir glatte, og
+dere mister en tredjedel av skapvolumet. Velg på looken (Render-fanen viser
+begge) og på om dere faktisk vil sitte der.
 
 ## Anbefaling
 

@@ -4,9 +4,11 @@ import {
   TARGET_WIDTH,
   UNIT_X,
   UPPER_Y,
+  UPPER_Y_LOW,
   filler,
   mdfFraming,
   metodBase,
+  metodBaseLow,
   SITE_NOTES,
 } from "./common";
 
@@ -302,4 +304,98 @@ function v5(): Design {
   };
 }
 
-export const DESIGNS: Design[] = [v1(), v2(), v3(), v4(), v5()];
+const LOW_NOTES = [
+  "Lav benk (50.8 cm) er sittehøyde — forsterk platen med tverrlekt hvis den skal sittes på ved fronten (utheng 6–8 cm).",
+  "Shaker-dører finnes IKKE i 40-høyde — VEDDINGE er glatt. Shaker-look: lim MDF-lister på dørene, eller aksepter glatt base.",
+  "80-gavlene i basen flukter med overdelens gavler — lastbane rett ned, ingen klossing under platen nødvendig.",
+];
+
+/** V6 — low bench (livingetc-style) + BILLY cut to 185. */
+function v6(): Design {
+  const base = metodBaseLow();
+  const upperH = 1850;
+  const sideFill = 100; // same 4×80 rhythm as the base
+  const modules: Module[] = [
+    ...base.modules,
+    filler("fill-l", UNIT_X, UPPER_Y_LOW, upperH, sideFill, 280),
+    ...[0, 1, 2, 3].map((i) =>
+      shelfRun(`billy-${i}`, `BILLY ${i + 1} (kappet til 185)`, "billy-80x28x202", {
+        x: UNIT_X + sideFill + i * 800,
+        y: UPPER_Y_LOW,
+        w: 800,
+        d: 280,
+        h: upperH,
+        columns: 1,
+        shelves: 5,
+        cutNote: "Kapp kun 170 mm av TOPPEN (fabrikkbunn står på platen). Kappet som borejigg for topplate-hull; re-spikre bakplate.",
+      }),
+    ),
+    filler("fill-r", UNIT_X + sideFill + 3200, UPPER_Y_LOW, upperH, sideFill, 280),
+    ...mdfFraming(280, UPPER_Y_LOW + upperH),
+  ];
+  return {
+    id: "v6-lavbenk-billy",
+    name: "V6 · Lav benk + BILLY",
+    description:
+      "Livingetc-varianten: METOD veggskap 80×37×40 som sittebenk (50.8 cm) i stedet for sideboard-høyde. BILLY kappes bare 17 cm (til 185) og får 6 hyllenivåer. 4×80-rytme fra gulv til tak — alle gavler flukter.",
+    room: ROOM,
+    unitOffsetMm: UNIT_X,
+    targetWidthMm: TARGET_WIDTH,
+    modules,
+    extraParts: [
+      ...base.extraParts,
+      { itemId: "billy-extra-shelf-76x26", qty: 4, label: "Ekstra hylleplater" },
+    ],
+    siteNotes: [...SITE_NOTES, ...LOW_NOTES],
+    verdict:
+      "Billigst av alle (~12 500 kr), minst kapping (17 cm av toppen), perfekt gavlflukt og vindusbenk-følelse med puter. Men: bare 2/3 så mye lukket oppbevaring som V3, glatte dører (ingen shaker i 40-høyde), og proporsjonene avviker fra referansebildet — mer bibliotek, mindre sideboard.",
+  };
+}
+
+/** V7 — low bench + Bohus Base cut to 185. */
+function v7(): Design {
+  const base = metodBaseLow();
+  const upperH = 1850;
+  const bohusW = 790;
+  const runW = 4 * bohusW; // 3160
+  const sideFill = (TARGET_WIDTH - runW) / 2; // 120
+  const modules: Module[] = [
+    ...base.modules,
+    filler("fill-l", UNIT_X, UPPER_Y_LOW, upperH, sideFill, 267),
+    ...[0, 1, 2, 3].map((i) =>
+      shelfRun(`bohus-${i}`, `Bohus Base ${i + 1} (kappet til 185)`, "bohus-base-bokhylle-80", {
+        x: UNIT_X + sideFill + i * bohusW,
+        y: UPPER_Y_LOW,
+        w: bohusW,
+        d: 267,
+        h: upperH,
+        columns: 1,
+        shelves: 5,
+        cutNote: "Kapp ~180 mm av TOPPEN, re-monter topplaten (kappet som jigg). Erstatt/stiv av hyller med 18 mm MDF (orig. 13 kg).",
+      }),
+    ),
+    filler("fill-r", UNIT_X + sideFill + runW, UPPER_Y_LOW, upperH, sideFill, 267),
+    ...mdfFraming(267, UPPER_Y_LOW + upperH),
+  ];
+  return {
+    id: "v7-lavbenk-bohus",
+    name: "V7 · Lav benk + Bohus",
+    description:
+      "Som V6, men med Bohus Base-overdel (26.7 cm dyp) kappet til 185 cm. Base-gavler (80-rytme) og Bohus-gavler (79-rytme) flukter nesten — 1 cm glidning per skrog utover.",
+    room: ROOM,
+    unitOffsetMm: UNIT_X,
+    targetWidthMm: TARGET_WIDTH,
+    modules,
+    extraParts: base.extraParts,
+    siteNotes: [
+      ...SITE_NOTES,
+      ...LOW_NOTES,
+      "Bohus-hyllene tåler 13 kg — bytt/stiv av med 18 mm MDF ved boklast.",
+      "79 mot 80-rytme: opptil 3 cm gavl-glidning ytterst — legg kloss under platen ved ytterste Bohus-gavler.",
+    ],
+    verdict:
+      "Lav-benk-versjonen av V1: mer hyllehøyde (6 nivåer), mindre kapping enn V1 (18 cm mot 38). Samme svake Bohus-hyller, og glatte VEDDINGE-dører i basen. God mellomting hvis dere vil ha vindusbenk-looken.",
+  };
+}
+
+export const DESIGNS: Design[] = [v1(), v2(), v3(), v4(), v5(), v6(), v7()];

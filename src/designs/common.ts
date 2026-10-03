@@ -20,6 +20,8 @@ export const TOP_H = 28;
 export const TOP_D = 450;
 export const TOP_Y = LEG_H + BASE_FRAME_H; // 680
 export const UPPER_Y = TOP_Y + TOP_H; // 708
+/** Low-bench stack (livingetc-style 40 cm frames): 80 + 400 + 28. */
+export const UPPER_Y_LOW = LEG_H + 400 + TOP_H; // 508
 
 const GREIGE = "#b4a894"; // render-ish painted grey-beige
 
@@ -91,6 +93,70 @@ export function metodBase(): { modules: Module[]; extraParts: ExtraPart[] } {
   ];
 
   return { modules, extraParts };
+}
+
+/** Low bench (benk i sittehøyde, som livingetc-METOD-hacken): 4× METOD
+ * veggskap 80×37×40 på sokkel, 100 mm foring per side. Kun 40×40-dører
+ * finnes i denne høyden (glatte, ingen shaker) — VEDDINGE. 80-gavlene
+ * flukter perfekt med 80-brede overdeler. */
+export function metodBaseLow(): { modules: Module[]; extraParts: ExtraPart[] } {
+  const frameH = 400;
+  const modules: Module[] = [];
+  const sideFill = 100;
+  for (let i = 0; i < 4; i++) {
+    modules.push({
+      id: `base-${i}`,
+      label: `METOD 80 lav`,
+      kind: "cabinet",
+      source: { type: "catalogue", itemId: "metod-wall-80x37x40", qty: 1 },
+      x: UNIT_X + sideFill + i * 800,
+      y: LEG_H,
+      z: 0,
+      w: 800,
+      d: BASE_FRAME_D,
+      h: frameH,
+      doors: 2,
+      colorHex: GREIGE,
+    });
+  }
+  modules.push(
+    filler("bfill-l", UNIT_X, LEG_H, frameH, sideFill, BASE_FRAME_D),
+    filler("bfill-r", UNIT_X + sideFill + 3200, LEG_H, frameH, sideFill, BASE_FRAME_D),
+    {
+      id: "plinth",
+      label: "Sokkel (malt MDF)",
+      kind: "plinth",
+      source: { type: "custom", material: "19 mm MDF, malt" },
+      x: UNIT_X + 30,
+      y: 0,
+      z: 0,
+      w: TARGET_WIDTH - 60,
+      d: BASE_FRAME_D - 50,
+      h: LEG_H,
+      colorHex: "#9c9183",
+    },
+    {
+      id: "top",
+      label: "Benkeplate 340×45 (sittebenk)",
+      kind: "top",
+      source: { type: "catalogue", itemId: "ekbacken-custom-top", qty: 4 },
+      x: UNIT_X,
+      y: LEG_H + frameH,
+      z: 0,
+      w: TARGET_WIDTH,
+      d: TOP_D,
+      h: TOP_H,
+      cut: { note: "EKBACKEN spesialtilpasset 3400×450 mm, eller snekkerlevert plate" },
+      colorHex: "#c4b9a6",
+    },
+  );
+  return {
+    modules,
+    extraParts: [
+      { itemId: "metod-leg-8cm-2pk", qty: 16, label: "METOD ben (4 per skrog)" },
+      { itemId: "veddinge-door-40x40", qty: 8, label: "Dører (glatte — shaker finnes ikke i 40-høyde)" },
+    ],
+  };
 }
 
 /** Crown/scribe closing the gap between unit top and soffit. Side cladding is

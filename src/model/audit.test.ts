@@ -12,12 +12,18 @@ import { bestCombo, planWidth, widthSweep, BASE_WIDTHS, BILLY_WIDTHS, BOHUS_WIDT
  *  V4 = 9671 + 8×545 + 2×335            = 14701
  *  V5 = 9671 + 6×1050 + 4×1260 + 5×1150 = 26761
  *  Unverified share: doors 2560 + top 3980 = 6540 (V4 also 2×335 → 7210) */
+/** Low bench (V6/V7): frames 4×455 (1820) + VEDDINGE doors 8×230 (1840)
+ *  + legs 8 packs × 75 (600) + EKBACKEN 4 m (3980) = 8240.
+ *  V6 = 8240 + 4×(895+180) = 12540; V7 = 8240 + 4×1899 = 15836.
+ *  Unverified: doors 1840 + top 3980 = 5820. */
 const EXPECTED: Record<string, { total: number; unverified: number }> = {
   "v1-bohus": { total: 17267, unverified: 6540 },
   "v2-besta": { total: 17596, unverified: 6540 },
   "v3-billy": { total: 13971, unverified: 6540 },
   "v4-metod": { total: 14701, unverified: 7210 },
   "v5-string": { total: 26761, unverified: 6540 },
+  "v6-lavbenk-billy": { total: 12540, unverified: 5820 },
+  "v7-lavbenk-bohus": { total: 15836, unverified: 5820 },
 };
 
 describe("cost audit (hand-computed expectations)", () => {

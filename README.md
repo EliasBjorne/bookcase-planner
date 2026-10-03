@@ -29,6 +29,8 @@ Se `docs/variants.md` for full sammenlikning med tall, eller «Sammenlikn alle»
 | V3 | 4× BILLY 80 kappet til 165 | 280 | ~14 000 kr |
 | V4 | Åpne METOD veggskap 2×80 høyt | 366 | ~14 700 kr |
 | V5 | String-system vegghengt | 200 | ~26 800 kr |
+| V6 | **Lav benk (50.8)** + BILLY kappet til 185 | 280 | ~12 500 kr |
+| V7 | **Lav benk (50.8)** + Bohus kappet til 185 | 267 | ~15 800 kr |
 
 Alle deler basen: METOD veggskap 3×80+60+40 på 8 cm ben (det finnes **ikke**
 60 cm høye METOD *benkeskap* — veggskap på ben er trikset), STENSUND-dører,

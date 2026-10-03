@@ -1,6 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-const DESIGNS = ["v1-bohus", "v2-besta", "v3-billy", "v4-metod", "v5-string"];
+const DESIGNS = [
+  "v1-bohus",
+  "v2-besta",
+  "v3-billy",
+  "v4-metod",
+  "v5-string",
+  "v6-lavbenk-billy",
+  "v7-lavbenk-bohus",
+];
 
 for (const id of DESIGNS) {
   test(`${id}: 3D view renders`, async ({ page }) => {
@@ -41,11 +49,11 @@ for (const id of DESIGNS) {
   });
 }
 
-test("comparison shows all five variants", async ({ page }) => {
+test("comparison shows all seven variants", async ({ page }) => {
   await page.goto(`/#/v1-bohus/sammenlikn`);
   const table = page.locator("table.compare");
   await expect(table).toBeVisible();
-  for (const id of ["V1", "V2", "V3", "V4", "V5"]) {
+  for (const id of ["V1", "V2", "V3", "V4", "V5", "V6", "V7"]) {
     await expect(table).toContainText(id);
   }
   await page.screenshot({ path: "docs/screenshots/sammenlikn.png", fullPage: true });
