@@ -1,0 +1,106 @@
+:root {
+  --bg: #f6f3ee;
+  --panel: #fffdf9;
+  --ink: #2c2822;
+  --accent: #0a66a8;
+  --line: #ddd5c8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+#app { display: flex; min-height: 100vh; }
+
+#sidebar {
+  width: 260px;
+  flex: 0 0 260px;
+  padding: 18px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+#sidebar h1 { font-size: 22px; margin: 0 0 2px; line-height: 1.1; }
+#sidebar .sub { color: #8a7f6e; font-size: 12px; margin: 0 0 16px; }
+
+nav { display: flex; flex-direction: column; gap: 4px; margin-bottom: 18px; }
+nav a {
+  padding: 7px 10px;
+  border-radius: 7px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 14px;
+}
+nav a:hover { background: #efe9dd; }
+nav a.active { background: var(--accent); color: white; }
+#view-nav { flex-direction: row; flex-wrap: wrap; }
+#view-nav a { font-size: 13px; padding: 5px 9px; }
+
+#violations { font-size: 12px; display: flex; flex-direction: column; gap: 4px; }
+.viol { padding: 5px 8px; border-radius: 6px; background: #eee; }
+.viol.error { background: #fbdfdc; color: #8a1d12; }
+.viol.warning { background: #fcf0d4; color: #7a5b0d; }
+.viol.info { background: #e3edf5; color: #1d4e75; }
+.viol.ok { background: #e0f0e2; color: #1d6630; }
+
+#content { flex: 1; padding: 22px 28px; overflow-x: auto; }
+#content h2 { margin-top: 0; }
+
+.design-desc { max-width: 900px; color: #5c5345; margin-bottom: 14px; }
+.verdict-box {
+  max-width: 900px;
+  background: #f1ead9;
+  border-left: 4px solid #b4a894;
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+#three-container { width: 100%; height: calc(100vh - 220px); min-height: 420px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+
+.elevation-wrap { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 20px; }
+.elevation-wrap svg { width: 100%; height: auto; display: block; }
+
+table { border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; font-size: 14px; margin-bottom: 24px; }
+th, td { padding: 7px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+thead th { background: #efe9dd; }
+tfoot th { background: #f6f1e6; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.unverified td { background: #fdf7e7; }
+table.compare td, table.compare th { max-width: 230px; }
+.verdict { font-size: 12.5px; color: #5c5345; }
+.note { color: #8a7f6e; font-size: 13px; max-width: 900px; }
+
+pre {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 12.5px;
+  white-space: pre-wrap;
+  max-width: 900px;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+button:hover { filter: brightness(1.1); }
+
+@media print {
+  #sidebar, .handoff-actions, #view-nav { display: none !important; }
+  #content { padding: 0; }
+  body { background: white; }
+}

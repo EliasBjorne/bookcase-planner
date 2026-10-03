@@ -1,0 +1,65 @@
+{
+  "comment": "Seed imported from the IKEA kitchen planner (HomeByMe BMPROJ). Positions are raw matrix translations — verify before use. This file is reference data, not one of the five bookcase variants.",
+  "importedAt": "2026-10-03T10:45:08.595Z",
+  "projectId": "2EF18B9F-0781-4D01-9C0D-37C5827854B2",
+  "projectName": "Design m/EKET løsning",
+  "wallCount": 4,
+  "modules": [
+    {
+      "id": "kitchen-0",
+      "uuid": "B8EA7836-97E3-405A-978D-B23CECD0DCCE",
+      "label": "METOD 600×600×802, front SCP-121_veddinge_front.bm3-10935-width-height-NO",
+      "kind": "cabinet",
+      "legHeight": 80,
+      "leg": "ART-70556067-NO",
+      "handle": "ART-80338408-NO",
+      "planXMm": -1546,
+      "planYMm": -1475,
+      "w": 600,
+      "d": 600,
+      "h": 802
+    },
+    {
+      "id": "kitchen-1",
+      "uuid": "54447CEC-49A9-4045-8181-E6794876D688",
+      "label": "METOD 600×600×802, front SCP-121_veddinge_front.bm3-10935-width-height-NO",
+      "kind": "cabinet",
+      "legHeight": 80,
+      "leg": "ART-70556067-NO",
+      "handle": "ART-80338408-NO",
+      "planXMm": -1546,
+      "planYMm": -875,
+      "w": 600,
+      "d": 600,
+      "h": 802
+    },
+    {
+      "id": "kitchen-2",
+      "uuid": "92A90EC1-6392-4135-A181-17E237079FC2",
+      "label": "METOD 600×600×802, front SCP-121_veddinge_front.bm3-10935-width-height-NO",
+      "kind": "cabinet",
+      "legHeight": 80,
+      "leg": "ART-70556067-NO",
+      "handle": "ART-80338408-NO",
+      "planXMm": -1546,
+      "planYMm": -275,
+      "w": 600,
+      "d": 600,
+      "h": 802
+    },
+    {
+      "id": "kitchen-3",
+      "uuid": "FC8E6CB8-5661-4AF6-BFC7-506F4BBA02E6",
+      "label": "METOD 600×600×802, front SCP-121_veddinge_front.bm3-10935-width-height-NO",
+      "kind": "cabinet",
+      "legHeight": 80,
+      "leg": "ART-70556067-NO",
+      "handle": "ART-80338408-NO",
+      "planXMm": -1546,
+      "planYMm": 325,
+      "w": 600,
+      "d": 600,
+      "h": 802
+    }
+  ]
+}
