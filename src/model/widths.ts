@@ -1,4 +1,8 @@
 import { getItem, priceFor } from "./catalogue";
+import {
+  DOOR_FOR_FRAME_H600 as DOOR_FOR_FRAME,
+  FRAME_ITEM_H600 as FRAME_ITEM,
+} from "../designs/common";
 
 /** Width-sweep solver: for a target unit width, find the best arrangement of
  * METOD base frames and upper carcasses (V1 Bohus / V3 BILLY), with fillers. */
@@ -66,17 +70,6 @@ export interface WidthPlan {
   notes: string[];
 }
 
-const DOOR_FOR_FRAME: Record<number, { doors: number; itemId: string }> = {
-  800: { doors: 2, itemId: "stensund-door-40x60" },
-  600: { doors: 1, itemId: "stensund-door-60x60" },
-  400: { doors: 1, itemId: "stensund-door-40x60" },
-};
-
-const FRAME_ITEM: Record<number, string> = {
-  800: "metod-wall-80x37x60",
-  600: "metod-wall-60x37x60",
-  400: "metod-wall-40x37x60",
-};
 
 export function planWidth(targetMm: number): WidthPlan {
   const base = bestCombo(targetMm, BASE_WIDTHS);

@@ -16,10 +16,17 @@ import { bestCombo, planWidth, widthSweep, BASE_WIDTHS, BILLY_WIDTHS, BOHUS_WIDT
  *  + legs 8 packs × 75 (600) + EKBACKEN 4 m (3980) = 8240.
  *  V6 = 8240 + 4×(895+180) = 12540; V7 = 8240 + 4×1899 = 15836.
  *  Unverified: doors 1840 + top 3980 = 5820. */
+/** V3 widths, same arithmetic per width (frames/doors/legs/top + BILLY units):
+ *  300: 1952+2260+600+2985 (base 7797) + 3×1075+795 (4020) = 11817
+ *  320: 1996+2400+600+3980 (base 8976) + 4×1075 (4300)     = 13276
+ *  360: 2425+2700+750+3980 (base 9855) + 4×1075+795 (5095) = 14950 */
 const EXPECTED: Record<string, { total: number; unverified: number }> = {
   "v1-bohus": { total: 17267, unverified: 6540 },
   "v2-besta": { total: 17596, unverified: 6540 },
+  "v3-billy-300": { total: 11817, unverified: 5245 },
+  "v3-billy-320": { total: 13276, unverified: 6380 },
   "v3-billy": { total: 13971, unverified: 6540 },
+  "v3-billy-360": { total: 14950, unverified: 6680 },
   "v4-metod": { total: 14701, unverified: 7210 },
   "v5-string": { total: 26761, unverified: 6540 },
   "v6-lavbenk-billy": { total: 12540, unverified: 5820 },
@@ -62,6 +69,13 @@ describe("width solver", () => {
     const p = planWidth(3400);
     expect(p.totalBilly).toBe(EXPECTED["v3-billy"].total);
     expect(p.totalBohus).toBe(EXPECTED["v1-bohus"].total);
+  });
+
+  it("every V3 width design matches the width solver's total", () => {
+    for (const d of DESIGNS.filter((x) => x.id.startsWith("v3-billy"))) {
+      const p = planWidth(d.targetWidthMm);
+      expect(partsList(d).totalNok, d.id).toBe(p.totalBilly);
+    }
   });
 
   it("sweep covers 3.0–3.6 m in 7 steps, filler always < one module", () => {

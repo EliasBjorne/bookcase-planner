@@ -1,4 +1,5 @@
 import type { Design, Module } from "../model/types";
+import { BASE_WIDTHS, BILLY_WIDTHS, bestCombo } from "../model/widths";
 import {
   ROOM,
   TARGET_WIDTH,
@@ -147,52 +148,86 @@ function v2(): Design {
   };
 }
 
-/** V3 — METOD base + 4× BILLY 80 cut to height. */
-function v3(): Design {
-  const base = metodBase();
+/** V3 family — METOD base + BILLY cut to height, at selectable total widths.
+ * Frame/BILLY combos come from the same solver as the width explorer. */
+export const V3_WIDTHS = [3000, 3200, 3400, 3600];
+
+function v3At(targetMm: number): Design {
+  const unitX = Math.round((ROOM.wallWidthMm - targetMm) / 2);
+  const baseCombo = bestCombo(targetMm, BASE_WIDTHS);
+  const billyCombo = bestCombo(targetMm, BILLY_WIDTHS);
+  const base = metodBase(baseCombo.widths, unitX, targetMm);
   const upperH = 1650;
-  const runW = 4 * 800; // 3200
-  const sideFill = (TARGET_WIDTH - runW) / 2; // 100
-  const modules: Module[] = [
-    ...base.modules,
-    filler("fill-l", UNIT_X, UPPER_Y, upperH, sideFill, 280),
-    ...[0, 1, 2, 3].map((i) =>
-      shelfRun(`billy-${i}`, `BILLY ${i + 1} (kappet til 165)`, "billy-80x28x202", {
-        x: UNIT_X + sideFill + i * 800,
+  const sideFill = billyCombo.fillerMm / 2;
+  const billy80Count = billyCombo.widths.filter((w) => w === 800).length;
+
+  let bx = unitX + sideFill;
+  const billyModules: Module[] = billyCombo.widths.map((w, i) => {
+    const m = shelfRun(
+      `billy-${i}`,
+      `BILLY ${w / 10} (kappet til 165)`,
+      w === 800 ? "billy-80x28x202" : "billy-40x28x202",
+      {
+        x: bx,
         y: UPPER_Y,
-        w: 800,
+        w,
         d: 280,
         h: upperH,
         columns: 1,
         shelves: 4,
         cutNote: "Kapp 370 mm av TOPPEN (fabrikkbunn + sokkelkant blir stående på platen). Bruk kappet som borejigg for nye tapp-/kamlåshull til topplaten. Kort inn og re-spikre bakplaten tett etter diagonalmåling.",
-      }),
-    ),
-    filler("fill-r", UNIT_X + sideFill + runW, UPPER_Y, upperH, sideFill, 280),
-    ...mdfFraming(280, UPPER_Y + upperH),
+      },
+    );
+    bx += w;
+    return m;
+  });
+
+  const modules: Module[] = [
+    ...base.modules,
+    ...(sideFill > 0
+      ? [
+          filler("fill-l", unitX, UPPER_Y, upperH, sideFill, 280),
+          filler("fill-r", unitX + sideFill + billyCombo.sumMm, UPPER_Y, upperH, sideFill, 280),
+        ]
+      : []),
+    ...billyModules,
+    ...mdfFraming(280, UPPER_Y + upperH, unitX, targetMm),
   ];
+
+  const isDefault = targetMm === TARGET_WIDTH;
   return {
-    id: "v3-billy",
-    name: "V3 · METOD + kappet BILLY",
+    id: isDefault ? "v3-billy" : `v3-billy-${targetMm / 10}`,
+    name: `V3 · BILLY ${targetMm / 10} cm`,
     description:
-      "Klassisk IKEA-hack: 4× BILLY 80×28×202 kappes til 165 cm oppå basen. 28 cm dybde (mot skissens 20), solid 30 kg hyllelast, god kolonnerytme på 80 cm.",
+      `Klassisk IKEA-hack i ${targetMm / 10} cm bredde: base ${baseCombo.widths.map((w) => w / 10).join("+")}${baseCombo.fillerMm ? ` (+${baseCombo.fillerMm / 2} mm foring/side)` : " (eksakt)"}, ` +
+      `BILLY ${billyCombo.widths.map((w) => w / 10).join("+")}${billyCombo.fillerMm ? ` (+${billyCombo.fillerMm / 2} mm foring/side)` : " (eksakt)"} kappet til 165. ` +
+      "28 cm dybde, 30 kg hyllelast." +
+      (targetMm === 3600 ? " NB: fyller hele friveggen (3602) — krever at sjaktmålet stemmer!" : ""),
     room: ROOM,
-    unitOffsetMm: UNIT_X,
-    targetWidthMm: TARGET_WIDTH,
+    unitOffsetMm: unitX,
+    targetWidthMm: targetMm,
     modules,
     extraParts: [
       ...base.extraParts,
-      { itemId: "billy-extra-shelf-76x26", qty: 4, label: "Ekstra hylleplater" },
+      ...(billy80Count > 0
+        ? [{ itemId: "billy-extra-shelf-76x26", qty: billy80Count, label: "Ekstra hylleplater (80-brede)" }]
+        : []),
     ],
     siteNotes: [
       ...SITE_NOTES,
       "BILLY kappes fra TOPPEN — fabrikkbunnen bærer mot platen (dokumentert i flere bygg, se docs/fastening.md).",
-      "BILLY-gavler treffer ikke METOD-gavlene overalt (80-rytme over 80/60/40) — legg kloss/tverrlekt under platen der gavler lander mellom stammer.",
+      "Der BILLY-gavler lander mellom METOD-gavler: kloss/tverrlekt under platen (se docs/fastening.md).",
       "Innfesting: lommeskruer/klosser ned i platen + feste i vegg i topp per skrog — full oppskrift i docs/fastening.md.",
       "Papirfolie: slip + heftgrunning før maling.",
     ],
     verdict:
-      "Mest robuste IKEA-overdel (30 kg/hylle) og 80-rytmen matcher renderet godt. 8 cm dypere enn skissen — sjekk downlight-avstanden. Kapping av 4 skrog er den store jobben.",
+      targetMm === 3400
+        ? "Mest robuste IKEA-overdel (30 kg/hylle) og 80-rytmen matcher renderet godt. 8 cm dypere enn skissen — sjekk downlight-avstanden. Kapping av 4 skrog er den store jobben."
+        : targetMm === 3200
+          ? "320 treffer eksakt for både base og BILLY (4×80) — null foring, reneste bygget. 20 cm mer luft til sjakten enn 340."
+          : targetMm === 3600
+            ? "Fyller friveggen helt (1 mm klaring på papiret!). Base og BILLY treffer eksakt (4×80+40). Mest hylleplass, men null slingringsmonn — kontrollmål sjakt og vegg først."
+            : "Minste varianten: base 3×80+60 eksakt, BILLY 3×80+40 med 10 cm foring/side. Luftigst, men minst oppbevaring.",
   };
 }
 
@@ -398,4 +433,12 @@ function v7(): Design {
   };
 }
 
-export const DESIGNS: Design[] = [v1(), v2(), v3(), v4(), v5(), v6(), v7()];
+export const DESIGNS: Design[] = [
+  v1(),
+  v2(),
+  ...V3_WIDTHS.map(v3At),
+  v4(),
+  v5(),
+  v6(),
+  v7(),
+];

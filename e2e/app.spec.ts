@@ -3,7 +3,10 @@ import { expect, test } from "@playwright/test";
 const DESIGNS = [
   "v1-bohus",
   "v2-besta",
+  "v3-billy-300",
+  "v3-billy-320",
   "v3-billy",
+  "v3-billy-360",
   "v4-metod",
   "v5-string",
   "v6-lavbenk-billy",

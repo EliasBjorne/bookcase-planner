@@ -30,8 +30,8 @@ describe("METOD base", () => {
 });
 
 describe("designs", () => {
-  it("has seven variants", () => {
-    expect(DESIGNS).toHaveLength(7);
+  it("has ten designs (7 variants, V3 in four widths)", () => {
+    expect(DESIGNS).toHaveLength(10);
   });
 
   for (const d of DESIGNS) {

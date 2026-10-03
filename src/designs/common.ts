@@ -25,36 +25,55 @@ export const UPPER_Y_LOW = LEG_H + 400 + TOP_H; // 508
 
 const GREIGE = "#b4a894"; // render-ish painted grey-beige
 
-/** Base run used by every variant: METOD wall frames 3×80 + 60 + 40 = 340 cm
- * standing on 8 cm legs, STENSUND-style doors, worktop on top.
- * (No 60 cm high METOD *base* frame exists — wall frames on legs is the trick.) */
-export function metodBase(): { modules: Module[]; extraParts: ExtraPart[] } {
-  const widths = [
-    { w: 800, item: "metod-wall-80x37x60", doors: 2 },
-    { w: 800, item: "metod-wall-80x37x60", doors: 2 },
-    { w: 800, item: "metod-wall-80x37x60", doors: 2 },
-    { w: 600, item: "metod-wall-60x37x60", doors: 1 },
-    { w: 400, item: "metod-wall-40x37x60", doors: 1 },
-  ];
+/** H600 wall-frame item + shaker-door mapping per frame width (shared with the
+ * width solver). */
+export const FRAME_ITEM_H600: Record<number, string> = {
+  800: "metod-wall-80x37x60",
+  600: "metod-wall-60x37x60",
+  400: "metod-wall-40x37x60",
+};
+export const DOOR_FOR_FRAME_H600: Record<number, { doors: number; itemId: string }> = {
+  800: { doors: 2, itemId: "stensund-door-40x60" },
+  600: { doors: 1, itemId: "stensund-door-60x60" },
+  400: { doors: 1, itemId: "stensund-door-40x60" },
+};
+
+/** Base run used by every variant: METOD H600 wall frames standing on 8 cm
+ * legs, STENSUND-style doors, worktop on top. (No 60 cm high METOD *base*
+ * frame exists — wall frames on legs is the trick.) Parametric in frame
+ * widths and unit position; defaults to the 340 cm design. */
+export function metodBase(
+  frameWidths: number[] = [800, 800, 800, 600, 400],
+  unitX: number = UNIT_X,
+  targetWidth: number = TARGET_WIDTH,
+): { modules: Module[]; extraParts: ExtraPart[] } {
+  const runW = frameWidths.reduce((s, w) => s + w, 0);
+  const sideFill = (targetWidth - runW) / 2;
   const modules: Module[] = [];
-  let x = UNIT_X;
-  widths.forEach((f, i) => {
+  let x = unitX + sideFill;
+  frameWidths.forEach((w, i) => {
     modules.push({
       id: `base-${i}`,
-      label: `METOD ${f.w / 10} cm`,
+      label: `METOD ${w / 10} cm`,
       kind: "cabinet",
-      source: { type: "catalogue", itemId: f.item, qty: 1 },
+      source: { type: "catalogue", itemId: FRAME_ITEM_H600[w], qty: 1 },
       x,
       y: LEG_H,
       z: 0,
-      w: f.w,
+      w,
       d: BASE_FRAME_D,
       h: BASE_FRAME_H,
-      doors: f.doors,
+      doors: DOOR_FOR_FRAME_H600[w].doors,
       colorHex: GREIGE,
     });
-    x += f.w;
+    x += w;
   });
+  if (sideFill > 0) {
+    modules.push(
+      filler("bfill-l", unitX, LEG_H, BASE_FRAME_H, sideFill, BASE_FRAME_D),
+      filler("bfill-r", unitX + sideFill + runW, LEG_H, BASE_FRAME_H, sideFill, BASE_FRAME_D),
+    );
+  }
 
   modules.push(
     {
@@ -62,34 +81,42 @@ export function metodBase(): { modules: Module[]; extraParts: ExtraPart[] } {
       label: "Sokkel (malt MDF)",
       kind: "plinth",
       source: { type: "custom", material: "19 mm MDF, malt" },
-      x: UNIT_X + 30,
+      x: unitX + 30,
       y: 0,
       z: 0,
-      w: TARGET_WIDTH - 60,
+      w: targetWidth - 60,
       d: BASE_FRAME_D - 50,
       h: LEG_H,
       colorHex: "#9c9183",
     },
     {
       id: "top",
-      label: "Benkeplate 340×45",
+      label: `Benkeplate ${targetWidth / 10}×45`,
       kind: "top",
-      source: { type: "catalogue", itemId: "ekbacken-custom-top", qty: 4 },
-      x: UNIT_X,
+      source: {
+        type: "catalogue",
+        itemId: "ekbacken-custom-top",
+        qty: Math.ceil(targetWidth / 1000),
+      },
+      x: unitX,
       y: TOP_Y,
       z: 0,
-      w: TARGET_WIDTH,
+      w: targetWidth,
       d: TOP_D,
       h: TOP_H,
-      cut: { note: "EKBACKEN spesialtilpasset 3400×450 mm (pris per påbegynt meter — bekreft i varehus), eller snekkerlevert plate" },
+      cut: { note: `EKBACKEN spesialtilpasset ${targetWidth}×450 mm (pris per påbegynt meter — bekreft i varehus), eller snekkerlevert plate` },
       colorHex: "#c4b9a6",
     },
   );
 
+  const doorQty = new Map<string, number>();
+  for (const w of frameWidths) {
+    const d = DOOR_FOR_FRAME_H600[w];
+    doorQty.set(d.itemId, (doorQty.get(d.itemId) ?? 0) + d.doors);
+  }
   const extraParts: ExtraPart[] = [
-    { itemId: "metod-leg-8cm-2pk", qty: 20, label: "METOD ben (4 per skrog)" },
-    { itemId: "stensund-door-40x60", qty: 7, label: "Dører til 80- og 40-skrog" },
-    { itemId: "stensund-door-60x60", qty: 1, label: "Dør til 60-skrog" },
+    { itemId: "metod-leg-8cm-2pk", qty: frameWidths.length * 4, label: "METOD ben (4 per skrog)" },
+    ...[...doorQty.entries()].map(([itemId, qty]) => ({ itemId, qty, label: "Dører" })),
   ];
 
   return { modules, extraParts };
@@ -161,7 +188,12 @@ export function metodBaseLow(): { modules: Module[]; extraParts: ExtraPart[] } {
 
 /** Crown/scribe closing the gap between unit top and soffit. Side cladding is
  * covered by the end fillers; the painted face frame is priced via the cut list. */
-export function mdfFraming(upperDepth: number, upperTop: number): Module[] {
+export function mdfFraming(
+  upperDepth: number,
+  upperTop: number,
+  unitX: number = UNIT_X,
+  targetWidth: number = TARGET_WIDTH,
+): Module[] {
   const crownH = ROOM.soffitHeightMm - upperTop;
   if (crownH <= 0) return [];
   return [
@@ -170,10 +202,10 @@ export function mdfFraming(upperDepth: number, upperTop: number): Module[] {
       label: `Gesims/losholt mot himling (${crownH} mm)`,
       kind: "panel",
       source: { type: "custom", material: "MDF, skjæres på stedet" },
-      x: UNIT_X,
+      x: unitX,
       y: upperTop,
       z: 0,
-      w: TARGET_WIDTH,
+      w: targetWidth,
       d: upperDepth,
       h: crownH,
       colorHex: GREIGE,
