@@ -272,6 +272,7 @@ button:hover { filter: brightness(1.08); }
 .opt-price { font-size: 13.5px; font-variant-numeric: tabular-nums; margin-top: auto; }
 .opt-price em { color: var(--muted); font-style: normal; }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #0002; }
+.door-thumb { border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 
 .wizard-nav { display: flex; justify-content: space-between; gap: 10px; }
 

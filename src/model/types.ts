@@ -65,6 +65,10 @@ export interface Module {
   shelves?: number;
   /** Door columns to draw on the front. */
   doors?: number;
+  /** Visual door profile and colour (set by the configurator; defaults shaker/unit colour). */
+  doorStyle?: "shaker" | "flat" | "bevel" | "country" | "gloss";
+  doorColorHex?: string;
+  doorKnobs?: boolean;
   cut?: CutInstruction;
   colorHex?: string;
 }

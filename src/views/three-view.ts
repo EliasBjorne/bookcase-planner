@@ -130,6 +130,29 @@ export class ThreeView {
       );
       this.designGroup.add(b);
 
+      // Door fronts (colour/profile follow the configured front).
+      if (m.kind === "cabinet" && m.doors) {
+        const dw = m.w / m.doors;
+        for (let i = 0; i < m.doors; i++) {
+          const door = this.box(dw - 6, m.h - 6, 18, m.doorColorHex ?? "#bcb09c");
+          door.position.set(
+            (m.x + (i + 0.5) * dw) / 1000,
+            (m.y + m.h / 2) / 1000,
+            (m.z + m.d + 9) / 1000,
+          );
+          this.designGroup.add(door);
+          if (m.doorKnobs ?? true) {
+            const knob = new THREE.Mesh(
+              new THREE.SphereGeometry(0.011, 12, 12),
+              new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.7, roughness: 0.3 }),
+            );
+            const kx = i % 2 === 0 ? m.x + (i + 1) * dw - 40 : m.x + i * dw + 40;
+            knob.position.set(kx / 1000, (m.y + m.h / 2) / 1000, (m.z + m.d + 32) / 1000);
+            this.designGroup.add(knob);
+          }
+        }
+      }
+
       if (open) {
         const cols = m.columns ?? 1;
         const colW = m.w / cols;

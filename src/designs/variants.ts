@@ -303,7 +303,7 @@ function v5(): Design {
 
 const LOW_NOTES = [
   "Lav benk (50.8 cm) er sittehøyde — forsterk platen med tverrlekt hvis den skal sittes på ved fronten (utheng 6–8 cm).",
-  "Shaker-dører finnes IKKE i 40-høyde — VEDDINGE er glatt. Shaker-look: lim MDF-lister på dørene, eller aksepter glatt base.",
+  "RETTELSE 2026-10-04: shaker FINNES i 40-høyde likevel (STENSUND 40×40 ~260 kr, BODBYN 350 — API-verifisert). Dette forslaget bruker glatt VEDDINGE; bytt front i veiviseren om ønskelig.",
   "80-gavlene i basen flukter med overdelens gavler — lastbane rett ned, ingen klossing under platen nødvendig.",
 ];
 
@@ -345,7 +345,7 @@ function v6(): Design {
     ],
     siteNotes: [...SITE_NOTES, ...LOW_NOTES],
     verdict:
-      "Billigst av alle (~12 500 kr), minst kapping (17 cm av toppen), perfekt gavlflukt og vindusbenk-følelse med puter. Men: bare 2/3 så mye lukket oppbevaring som V3, glatte dører (ingen shaker i 40-høyde), og proporsjonene avviker fra referansebildet — mer bibliotek, mindre sideboard.",
+      "Billigste forslag, minst kapping (17 cm av toppen), perfekt gavlflukt og vindusbenk-følelse med puter. Men: bare 2/3 så mye lukket oppbevaring som V3, og proporsjonene avviker fra referansebildet — mer bibliotek, mindre sideboard. (Forslaget bruker glatte dører; shaker i 40-høyde finnes — velg i veiviseren.)",
   };
 }
 

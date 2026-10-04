@@ -1,5 +1,6 @@
 import type { Design, ExtraPart, Module } from "./types";
 import { COLOR_HEX, constraintError, encodeSetup, type Setup } from "./setup";
+import { getFront } from "./fronts";
 import { BASE_WIDTHS, BILLY_WIDTHS, bestCombo } from "./widths";
 import {
   ROOM,
@@ -15,22 +16,15 @@ import {
 
 /** Build the family's configured design from the wizard's Setup. */
 
-function shade(hex: string, f: number): string {
-  const n = parseInt(hex.slice(1), 16);
-  const c = (v: number) => Math.max(0, Math.min(255, Math.round(v * f)));
-  const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map(c);
-  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
-}
+import { shade } from "./color";
 
-const FRONT_SWAP: Record<Setup["front"], Record<string, string>> = {
-  stensund: {},
-  veddinge: {},
-  noremax: {
-    "stensund-door-40x60": "noremax-classic-40x60",
-    "stensund-door-60x60": "noremax-classic-60x60",
-    "veddinge-door-40x40": "noremax-classic-40x40",
-  },
-};
+/** Legacy door ids the base builders emit — stripped and replaced by the
+ * chosen front's doors. */
+const LEGACY_DOOR_IDS = new Set([
+  "stensund-door-40x60",
+  "stensund-door-60x60",
+  "veddinge-door-40x40",
+]);
 
 interface Uppers {
   modules: Module[];
@@ -207,15 +201,39 @@ export function buildDesign(s: Setup): Design {
       ? metodBase(bestCombo(s.widthMm, BASE_WIDTHS).widths, unitX, s.widthMm)
       : metodBaseLow(unitX, s.widthMm);
 
-  // Front + knob swaps on the base's extraParts.
-  const swap = FRONT_SWAP[s.front];
-  let extraParts = base.extraParts.map((p) =>
-    swap[p.itemId] ? { ...p, itemId: swap[p.itemId] } : p,
-  );
-  if (s.knobs === "beslag-uno") {
+  // Replace the base builders' legacy doors with the chosen front's doors.
+  const front = getFront(s.front);
+  const baseCombo = s.bench === "high" ? bestCombo(s.widthMm, BASE_WIDTHS).widths
+    : Array(Math.floor(s.widthMm / 800)).fill(800);
+  const doorQty = new Map<string, number>();
+  let doorCount = 0;
+  for (const fw of baseCombo) {
+    if (s.bench === "low") {
+      doorQty.set(front.sizes.d4040, (doorQty.get(front.sizes.d4040) ?? 0) + 2);
+      doorCount += 2;
+    } else if (fw === 600) {
+      doorQty.set(front.sizes.d6060, (doorQty.get(front.sizes.d6060) ?? 0) + 1);
+      doorCount += 1;
+    } else {
+      const n = fw === 800 ? 2 : 1;
+      doorQty.set(front.sizes.d4060, (doorQty.get(front.sizes.d4060) ?? 0) + n);
+      doorCount += n;
+    }
+  }
+  let extraParts: ExtraPart[] = [
+    ...base.extraParts.filter((p) => !LEGACY_DOOR_IDS.has(p.itemId)),
+    ...[...doorQty.entries()].map(([itemId, qty]) => ({
+      itemId,
+      qty,
+      label: `Dører (${front.label})`,
+    })),
+  ];
+  if (front.integratedHandle) {
+    extraParts = extraParts.filter((p) => p.itemId !== "bagganas-knob-brass-2pk");
+  } else if (s.knobs === "beslag-uno") {
     extraParts = extraParts.map((p) =>
       p.itemId === "bagganas-knob-brass-2pk"
-        ? { ...p, itemId: "beslag-design-uno-knob", label: "Uno-knotter, ekte messing" }
+        ? { ...p, itemId: "beslag-design-uno-knob", qty: doorCount, label: "Uno-knotter, ekte messing" }
         : p,
     );
   }
@@ -239,14 +257,25 @@ export function buildDesign(s: Setup): Design {
   const upperTop = Math.max(...uppers.modules.map((m) => m.y + m.h));
   modules = [...modules, ...uppers.modules, ...mdfFraming(uppers.depth, upperTop, unitX, s.widthMm)];
 
-  // Colour: retint the standard palette.
+  // Colour: retint the standard palette. Doors follow the paint colour when
+  // the front is paintable (or Noremax custom-lacquered); otherwise they keep
+  // the factory finish.
   const unit = COLOR_HEX[s.color].unit;
   const tint: Record<string, string> = {
     "#b4a894": unit,
     "#9c9183": shade(unit, 0.86),
     "#c4b9a6": shade(unit, 1.08),
   };
-  modules = modules.map((m) => (m.colorHex && tint[m.colorHex] ? { ...m, colorHex: tint[m.colorHex] } : m));
+  const doorColor = front.paintable || front.customColor ? unit : front.factoryHex;
+  modules = modules.map((m) => {
+    const next = m.colorHex && tint[m.colorHex] ? { ...m, colorHex: tint[m.colorHex] } : { ...m };
+    if (next.kind === "cabinet" && next.doors) {
+      next.doorStyle = front.style;
+      next.doorColorHex = doorColor;
+      next.doorKnobs = !front.integratedHandle;
+    }
+    return next;
+  });
 
   if (s.lighting !== "none") {
     const n = s.lighting === "spots6" ? 6 : 9;
@@ -257,12 +286,11 @@ export function buildDesign(s: Setup): Design {
     );
   }
 
-  const frontNote =
-    s.front === "noremax"
-      ? "Noremax-fronter: bestill i valgt Jotun/NCS-kode, 5–8 ukers ledetid — lengste ledetid i prosjektet."
-      : s.front === "stensund"
-        ? "STENSUND sprøytelakkeres i valgt farge sammen med MDF-rammen (avfett, matting, heftgrunning)."
-        : "VEDDINGE (glatt) males med rammen — shaker finnes ikke i 40-høyde fra IKEA.";
+  const frontNote = front.customColor
+    ? `${front.label}: bestill i valgt Jotun/NCS-kode, 5–8 ukers ledetid — prosjektets lengste.`
+    : front.paintable
+      ? `${front.label} (${front.surface}) sprøytelakkeres i valgt farge sammen med MDF-rammen (avfett, matting, heftgrunning).`
+      : `${front.label} beholder fabrikkfargen (${front.surface} — males ikke); MDF-rammen males i matchende eller kontrasterende farge.`;
 
   return {
     id: `din-${encodeSetup(s)}`,

@@ -1,5 +1,12 @@
 # Frontvalg for METOD-basen — research 2026-10-04
 
+> **ERRATA (samme dag, ny API-sjekk):** Shaker-dører FINNES i 40-høyde likevel —
+> STENSUND 40×40 (005.239.14, 260 kr) og BODBYN 40×40 (102.054.97, 350 kr) er
+> verifisert i IKEAs søke-API. Påstanden «ingen shaker i 40-høyde» lenger ned
+> er dermed feil; lav-benk-varianter kan ha shaker. Veiviserens dør-steg har nå
+> hele METOD-sortimentet i våre størrelser (~17 serier, se
+> `catalogue/fronts-no.json`), med riktig profil og fabrikkfarge i renderet.
+
 **Hovedfunn: IKEA Norge selger ingen grå-beige shaker-dør.** STENSUND finnes
 kun i hvit og lys grønn (beige finnes i andre markeder, ikke NO), BODBYN kun i
 offwhite/svart, VEDHAMN (heleik-shaker) selges ikke i Norge. Dermed faller

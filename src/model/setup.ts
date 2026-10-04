@@ -1,6 +1,8 @@
 /** The family's interactive configuration: one value per decision the wizard
  * walks through. Encodable to a short URL token for sharing. */
 
+import { FRONTS } from "./fronts";
+
 export const WIDTHS = [3000, 3200, 3400, 3600] as const;
 export type WidthMm = (typeof WIDTHS)[number];
 
@@ -8,7 +10,8 @@ export interface Setup {
   widthMm: WidthMm;
   bench: "high" | "low";
   uppers: "billy" | "bohus" | "bbb" | "besta" | "metod" | "string";
-  front: "stensund" | "veddinge" | "noremax";
+  /** A FrontOption id from src/model/fronts.ts. */
+  front: string;
   color: "greige" | "linen" | "dark" | "wall";
   knobs: "bagganas" | "beslag-uno";
   top: "ekbacken" | "mdf-painted";
@@ -19,7 +22,7 @@ export const DEFAULT_SETUP: Setup = {
   widthMm: 3400,
   bench: "high",
   uppers: "billy",
-  front: "stensund",
+  front: "stensund-hvit",
   color: "greige",
   knobs: "bagganas",
   top: "ekbacken",
@@ -35,35 +38,28 @@ export const COLOR_HEX: Record<Setup["color"], { unit: string; label: string }> 
 
 /** Options that are not allowed together, with the reason shown in the UI. */
 export function constraintError(s: Setup): string | null {
-  if (s.bench === "low" && s.front === "stensund")
-    return "STENSUND finnes ikke i 40-høyde — velg VEDDINGE (glatt) eller Noremax.";
-  if (s.bench === "high" && s.front === "veddinge")
-    return "VEDDINGE-sporet gjelder lav benk — på høy benk er STENSUND shaker samme pris-klasse.";
   if (s.bench === "low" && (s.uppers === "besta" || s.uppers === "string" || s.uppers === "metod"))
     return "BESTÅ/String/METOD-overdeler er bare regnet ut for høy benk (stable-høydene passer ikke 50.8-benken).";
+  if (!FRONTS.some((f) => f.id === s.front)) return `Ukjent front: ${s.front}`;
   return null;
 }
 
-/** Auto-correct dependent fields after a change so the setup stays legal
- * (e.g. low bench forces VEDDINGE/Noremax fronts and a bench-safe upper).
+/** Auto-correct dependent fields after a change so the setup stays legal.
  * The field the user just edited is never auto-corrected — an illegal choice
  * of that field must surface as a constraint error instead. */
 export function normalize(s: Setup, edited?: keyof Setup): Setup {
   const out = { ...s };
-  if (out.bench === "low") {
-    if (out.front === "stensund" && edited !== "front") out.front = "veddinge";
-    if (
-      (out.uppers === "besta" || out.uppers === "string" || out.uppers === "metod") &&
-      edited !== "uppers"
-    )
-      out.uppers = "billy";
-  } else if (out.front === "veddinge" && edited !== "front") {
-    out.front = "stensund";
-  }
+  if (
+    out.bench === "low" &&
+    (out.uppers === "besta" || out.uppers === "string" || out.uppers === "metod") &&
+    edited !== "uppers"
+  )
+    out.uppers = "billy";
   return out;
 }
 
-/** Keep key order stable — the encoded token depends on it. */
+/** Keep key order stable — the encoded token depends on it. Each field is one
+ * base36 character. */
 const FIELDS: (keyof Setup)[] = [
   "widthMm",
   "bench",
@@ -75,11 +71,11 @@ const FIELDS: (keyof Setup)[] = [
   "lighting",
 ];
 
-const CODES: { [K in keyof Setup]: readonly (Setup[K] & (string | number))[] } = {
+const CODES: { [K in keyof Setup]: readonly (string | number)[] } = {
   widthMm: WIDTHS,
   bench: ["high", "low"],
   uppers: ["billy", "bohus", "bbb", "besta", "metod", "string"],
-  front: ["stensund", "veddinge", "noremax"],
+  front: FRONTS.map((f) => f.id),
   color: ["greige", "linen", "dark", "wall"],
   knobs: ["bagganas", "beslag-uno"],
   top: ["ekbacken", "mdf-painted"],
@@ -87,15 +83,15 @@ const CODES: { [K in keyof Setup]: readonly (Setup[K] & (string | number))[] } =
 };
 
 export function encodeSetup(s: Setup): string {
-  return FIELDS.map((f) => CODES[f].indexOf(s[f] as never)).join("");
+  return FIELDS.map((f) => (CODES[f].indexOf(s[f] as never) as number).toString(36)).join("");
 }
 
 export function decodeSetup(token: string | null | undefined): Setup | null {
-  if (!token || token.length !== FIELDS.length || !/^\d+$/.test(token)) return null;
+  if (!token || token.length !== FIELDS.length || !/^[0-9a-z]+$/.test(token)) return null;
   const out = { ...DEFAULT_SETUP };
   for (let i = 0; i < FIELDS.length; i++) {
     const f = FIELDS[i];
-    const idx = Number(token[i]);
+    const idx = parseInt(token[i], 36);
     const values = CODES[f];
     if (idx >= values.length) return null;
     (out as Record<string, unknown>)[f] = values[idx];

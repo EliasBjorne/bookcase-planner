@@ -112,15 +112,62 @@ function cellDecor(rnd: () => number, x: number, y: number, w: number, h: number
   return parts.join("");
 }
 
-function shakerDoor(x: number, y: number, w: number, h: number, knobSide: "l" | "r"): string {
+import { shade } from "../model/color";
+
+export type DoorStyle = "shaker" | "flat" | "bevel" | "country" | "gloss";
+
+/** One door face in a given profile and colour — the configurator's front
+ * choice must be visibly different here. */
+function drawDoor(
+  style: DoorStyle,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  color: string,
+  knobSide: "l" | "r",
+  knob: boolean,
+): string {
+  const edge = shade(color, 0.78);
   const inset = Math.min(w, h) * 0.13;
   const knobX = knobSide === "r" ? x + w - inset / 2 - 1 : x + inset / 2 + 1;
-  return [
-    rect(x + 1, y + 1, w - 2, h - 2, `fill="url(#door)" stroke="#9a8e7a" stroke-width="1"`),
-    rect(x + inset, y + inset, w - 2 * inset, h - 2 * inset, `fill="#aea283" stroke="#978b74" stroke-width="0.8"`),
-    rect(x + inset + 1, y + inset + 1, w - 2 * inset - 2, h - 2 * inset - 2, `fill="url(#panel)"`),
-    `<circle cx="${r2(knobX)}" cy="${r2(y + h / 2)}" r="3.2" fill="url(#brass)"/>`,
-  ].join("");
+  const parts: string[] = [`<g data-door-style="${style}">`];
+  // Slab.
+  parts.push(rect(x + 1, y + 1, w - 2, h - 2, `fill="${color}" stroke="${edge}" stroke-width="1"`));
+
+  switch (style) {
+    case "shaker":
+      parts.push(
+        rect(x + inset, y + inset, w - 2 * inset, h - 2 * inset, `fill="${shade(color, 0.93)}" stroke="${edge}" stroke-width="0.8"`),
+        rect(x + inset + 1.5, y + inset + 1.5, w - 2 * inset - 3, h - 2 * inset - 3, `fill="${shade(color, 0.985)}"`),
+      );
+      break;
+    case "bevel":
+      parts.push(
+        rect(x + inset * 0.7, y + inset * 0.7, w - 1.4 * inset, h - 1.4 * inset, `fill="none" stroke="${shade(color, 0.88)}" stroke-width="2.4"`),
+        rect(x + inset, y + inset, w - 2 * inset, h - 2 * inset, `fill="${shade(color, 0.96)}" stroke="${edge}" stroke-width="0.7" rx="2"`),
+        rect(x + inset * 1.5, y + inset * 1.5, w - 3 * inset, h - 3 * inset, `fill="${shade(color, 1.03)}" rx="2"`),
+      );
+      break;
+    case "country":
+      parts.push(
+        rect(x + inset, y + inset, w - 2 * inset, h - 2 * inset, `fill="${shade(color, 0.94)}" stroke="${edge}" stroke-width="1.1"`),
+        rect(x + inset * 1.35, y + inset * 1.35, w - 2.7 * inset, h - 2.7 * inset, `fill="none" stroke="${shade(color, 0.85)}" stroke-width="0.9"`),
+        rect(x + 1, y + h - inset * 1.1, w - 2, inset * 0.35, `fill="${shade(color, 0.9)}"`),
+      );
+      break;
+    case "gloss":
+      parts.push(
+        `<polygon points="${r2(x + w * 0.15)},${r2(y + 2)} ${r2(x + w * 0.4)},${r2(y + 2)} ${r2(x + w * 0.1)},${r2(y + h - 2)} ${r2(x + 2)},${r2(y + h - 2)}" fill="#ffffff55"/>`,
+      );
+      break;
+    case "flat":
+      parts.push(rect(x + 1, y + 1, w - 2, 2.5, `fill="${shade(color, 1.07)}"`));
+      break;
+  }
+  if (knob) parts.push(`<circle cx="${r2(knobX)}" cy="${r2(y + h / 2)}" r="3.2" fill="url(#brass)"/>`);
+  parts.push("</g>");
+  return parts.join("");
 }
 
 export function renderFront(d: Design): string {
@@ -188,8 +235,10 @@ export function renderFront(d: Design): string {
       g.push(rect(x, y, w, h, `fill="${col}" stroke="#9a8e7a" stroke-width="0.9"`));
       const doors = m.doors ?? 1;
       const dw = w / doors;
+      const style = m.doorStyle ?? "shaker";
+      const doorCol = m.doorColorHex ?? shade(col, 1.04);
       for (let i = 0; i < doors; i++) {
-        g.push(shakerDoor(x + i * dw, y, dw, h, i % 2 === 0 ? "r" : "l"));
+        g.push(drawDoor(style, x + i * dw, y, dw, h, doorCol, i % 2 === 0 ? "r" : "l", m.doorKnobs ?? true));
       }
       continue;
     }

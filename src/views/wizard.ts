@@ -1,12 +1,34 @@
 import { buildDesign } from "../model/build";
+import { shade } from "../model/color";
 import { partsList } from "../model/cost";
+import { FRONTS } from "../model/fronts";
 import {
   COLOR_HEX,
   constraintError,
   normalize,
   type Setup,
 } from "../model/setup";
-import { renderFront } from "./render";
+import { renderFront, type DoorStyle } from "./render";
+
+/** Mini door preview for the front cards. */
+function doorThumb(style: DoorStyle, color: string): string {
+  const edge = shade(color, 0.76);
+  const inner =
+    style === "shaker"
+      ? `<rect x="9" y="9" width="26" height="44" fill="${shade(color, 0.93)}" stroke="${edge}" stroke-width="1"/>`
+      : style === "bevel"
+        ? `<rect x="7" y="7" width="30" height="48" fill="none" stroke="${shade(color, 0.86)}" stroke-width="2.6" rx="2"/><rect x="11" y="11" width="22" height="40" fill="${shade(color, 1.03)}" rx="2"/>`
+        : style === "country"
+          ? `<rect x="9" y="9" width="26" height="40" fill="${shade(color, 0.94)}" stroke="${edge}" stroke-width="1.2"/><rect x="12" y="12" width="20" height="34" fill="none" stroke="${shade(color, 0.85)}" stroke-width="1"/><rect x="3" y="53" width="38" height="4" fill="${shade(color, 0.9)}"/>`
+          : style === "gloss"
+            ? `<polygon points="10,3 20,3 6,59 3,59" fill="#ffffff66"/>`
+            : `<rect x="3" y="3" width="38" height="3" fill="${shade(color, 1.08)}"/>`;
+  return `<svg viewBox="0 0 44 62" width="44" height="62" class="door-thumb" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="42" height="60" fill="${color}" stroke="${edge}" stroke-width="1.5" rx="1"/>
+    ${inner}
+    <circle cx="37" cy="31" r="2.4" fill="#c9a227"/>
+  </svg>`;
+}
 
 /** Step-by-step configurator. Each step edits one Setup field; option cards
  * show live totals computed by building the full design per option. */
@@ -18,6 +40,7 @@ interface Option {
   caveat?: string;
   recommended?: boolean;
   swatch?: string;
+  thumb?: string;
 }
 
 interface Step {
@@ -64,17 +87,20 @@ export const STEPS: Step[] = [
   {
     field: "front",
     title: "Hvilke dører på benken?",
-    help: "IKEA Norge har ingen grå-beige shaker — derfor males IKEA-dører, eller bestilles i eksakt farge.",
-    options: [
-      { value: "stensund", label: "STENSUND, males", desc: "Ekte shaker i PU-malt MDF — trygg å sprøytelakkere med rammen.", recommended: true },
-      { value: "veddinge", label: "VEDDINGE, males", desc: "Glatt dør (eneste IKEA-valg i 40-høyde), males med rammen." },
-      { value: "noremax", label: "Noremax Classic Style", desc: "Norskprodusert shaker i valgfri Jotun/NCS-farge, fabrikklakk.", caveat: "5–8 ukers ledetid — prosjektets lengste." },
-    ],
+    help: "Hele METOD-sortimentet i våre størrelser (IKEA-søk 2026-10-04) + Noremax. «Males»-dører tar fargen du velger i neste steg; resten beholder fabrikkfargen i forhåndsvisningen.",
+    options: FRONTS.map((f) => ({
+      value: f.id,
+      label: f.label,
+      desc: `${f.surface} · ${f.paintable ? "males i valgt farge" : f.customColor ? "fabrikklakkert i valgt farge" : "fabrikkfarge (males ikke)"}`,
+      caveat: f.caveat,
+      recommended: f.recommended,
+      thumb: doorThumb(f.style, f.customColor ? "#b4a894" : f.factoryHex),
+    })),
   },
   {
     field: "color",
-    title: "Hvilken farge?",
-    help: "Velg koden før bestilling — den styrer både maler og ev. Noremax-ordre. Test A4-oppstrøk i dag- og kveldslys.",
+    title: "Hvilken farge på rammen og malbare dører?",
+    help: "Velg koden før bestilling — den styrer både maler og ev. Noremax-ordre. Test A4-oppstrøk i dag- og kveldslys. NB: valgte du en fabrikkfarge-dør (folie/finér), beholder døren sin farge — dette styrer resten.",
     options: (Object.keys(COLOR_HEX) as (keyof typeof COLOR_HEX)[]).map((c) => ({
       value: c,
       label: COLOR_HEX[c].label.split(" (")[0],
@@ -139,6 +165,7 @@ export function wizardHtml(setup: Setup, stepIdx: number): string {
       const delta = total === null ? null : total - current;
       return `
       <button class="opt-card ${active ? "active" : ""}" data-field="${step.field}" data-value="${o.value}" ${err ? `disabled title="${err}"` : ""} data-testid="opt-${o.value}">
+        ${o.thumb ?? ""}
         ${o.swatch ? `<span class="swatch" style="background:${o.swatch}"></span>` : ""}
         <span class="opt-label">${o.label} ${o.recommended ? `<span class="chip st-done">anbefalt</span>` : ""}</span>
         <span class="opt-desc">${o.desc}</span>

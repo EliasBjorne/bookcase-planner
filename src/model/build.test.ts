@@ -16,8 +16,8 @@ describe("buildDesign ≡ preset audits", () => {
     ["v4 (metod)", { uppers: "metod" }, 17481],
     ["v5 (string)", { uppers: "string" }, 29541],
     ["v8 (bbb)", { uppers: "bbb" }, 21261],
-    ["v6 (low billy)", { bench: "low", front: "veddinge" }, 14460],
-    ["v7 (low bohus)", { bench: "low", front: "veddinge", uppers: "bohus" }, 17756],
+    ["v6 (low billy)", { bench: "low", front: "veddinge-hvit" }, 14460],
+    ["v7 (low bohus)", { bench: "low", front: "veddinge-hvit", uppers: "bohus" }, 17756],
     ["v3-320", { widthMm: 3200 }, 15956],
     ["v3-360", { widthMm: 3600 }, 18050],
   ];
@@ -34,7 +34,22 @@ describe("option price effects (hand-computed)", () => {
   });
 
   it("Noremax fronts: −(7×300+460) +(7×1820+2213) → +12393", () => {
-    expect(partsList(buildDesign(setup({ front: "noremax" }))).totalNok).toBe(16751 + 12393);
+    expect(partsList(buildDesign(setup({ front: "noremax-custom" }))).totalNok).toBe(16751 + 12393);
+  });
+
+  it("BODBYN offwhite: −2560 +(7×390+595) → +765", () => {
+    expect(partsList(buildDesign(setup({ front: "bodbyn-offwhite" }))).totalNok).toBe(16751 + 765);
+  });
+
+  it("UPPLÖV (integrert grep) fjerner knottene: −2560 −360 +(7×345+525) → +20", () => {
+    expect(partsList(buildDesign(setup({ front: "upplov-beige" }))).totalNok).toBe(16751 - 2560 - 360 + 2940);
+  });
+
+  it("CORRECTED: shaker on the low bench works (STENSUND 40×40 = 260)", () => {
+    // low base 10160 − veddinge 8×230 (1840) + stensund 8×260 (2080) + billy 4300
+    const d = buildDesign(setup({ bench: "low", front: "stensund-hvit" }));
+    expect(partsList(d).totalNok).toBe(10160 - 1840 + 2080 + 4300);
+    expect(d.modules.some((m) => m.doorStyle === "shaker")).toBe(true);
   });
 
   it("painted MDF top removes EKBACKEN (−3980)", () => {
@@ -47,8 +62,20 @@ describe("option price effects (hand-computed)", () => {
 });
 
 describe("constraints and geometry", () => {
-  it("rejects STENSUND on the low bench", () => {
-    expect(() => buildDesign(setup({ bench: "low" }))).toThrow(/40-høyde/);
+  it("rejects stacked-system uppers on the low bench", () => {
+    expect(() => buildDesign(setup({ bench: "low", uppers: "besta" }))).toThrow(/høy benk/);
+  });
+
+  it("paintable fronts take the paint colour; foil fronts keep factory colour", () => {
+    const painted = buildDesign(setup({ front: "bodbyn-svart" })); // paintable bevel
+    const cabP = painted.modules.find((m) => m.kind === "cabinet" && m.doors)!;
+    expect(cabP.doorStyle).toBe("bevel");
+    expect(cabP.doorColorHex).toBe("#b4a894"); // painted in the chosen greige
+
+    const foil = buildDesign(setup({ front: "nickebo-antrasitt" })); // foil, not paintable
+    const cabF = foil.modules.find((m) => m.kind === "cabinet" && m.doors)!;
+    expect(cabF.doorStyle).toBe("flat");
+    expect(cabF.doorColorHex).toBe("#3b3d3e"); // factory anthracite survives colour choice
   });
 
   it("every legal width×uppers combo validates without hard errors", () => {
@@ -68,14 +95,14 @@ describe("constraints and geometry", () => {
 });
 
 describe("setup encoding", () => {
-  it("round-trips every field", () => {
-    const s = setup({ widthMm: 3600, bench: "low", uppers: "bohus", front: "noremax", color: "dark", knobs: "beslag-uno", top: "mdf-painted", lighting: "spots9" });
+  it("round-trips every field (incl. high front indices in base36)", () => {
+    const s = setup({ widthMm: 3600, bench: "low", uppers: "bohus", front: "forsbacka-eik", color: "dark", knobs: "beslag-uno", top: "mdf-painted", lighting: "spots9" });
     expect(decodeSetup(encodeSetup(s))).toEqual(s);
   });
 
   it("rejects malformed tokens", () => {
     expect(decodeSetup("9999")).toBeNull();
-    expect(decodeSetup("abcdefgh")).toBeNull();
+    expect(decodeSetup("ABCDEFGH")).toBeNull();
     expect(decodeSetup(null)).toBeNull();
   });
 });

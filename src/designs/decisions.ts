@@ -24,7 +24,7 @@ export const DECISIONS: Decision[] = [
     options: [
       "V3: billigst (14 0xx), 28 cm dyp, 4 skrog kappes",
       "V8: skissens 20 cm, null kapping, +4 500 kr, furu må males",
-      "V6/V7: lav sittebenk 50.8 cm — glatte dører (shaker finnes ikke i 40-høyde)",
+      "V6/V7: lav sittebenk 50.8 cm (shaker finnes også i 40-høyde — STENSUND/BODBYN 40×40 er API-verifisert)",
     ],
     recommendation:
       "V3 hvis 28 cm går klar av downlights (sjekk på stedet); V8 hvis 20 cm-dybden veier tyngst. Se Render-fanen side om side.",
@@ -50,12 +50,12 @@ export const DECISIONS: Decision[] = [
     status: "åpen",
     owner: "Familien",
     options: [
-      "A: IKEA-fabrikkfarge — FALLER BORT for grå-beige shaker: STENSUND finnes kun i hvit/lys grønn i Norge, BODBYN kun offwhite/svart, VEDHAMN selges ikke her. Nærmeste fabrikk-grå-beige er HAVSTORP — men den er glatt, ikke shaker.",
-      "B (verdi, ~4 500 kr + lakkering): STENSUND hvit (PU-malt MDF, ekte shaker-profil, trygg å overmale) sprøytelakkeres i valgt Jotun-farge sammen med MDF-rammen. Unngå folieserier (AXSTAD m.fl.) — folie slipper i kanter.",
+      "A: IKEA-fabrikkfarge — SVAKESTE spor for grå-beige shaker: STENSUND finnes kun i hvit/lys grågrønn i Norge, BODBYN kun offwhite/svart. Nærmeste fabrikk-grå-beige er HAVSTORP (glatt) eller UPPLÖV (folie). Hele sortimentet ligger nå i veiviserens dør-steg.",
+      "B (verdi, ~4 500 kr + lakkering): STENSUND hvit (PU-malt MDF, ekte shaker-profil, trygg å overmale) sprøytelakkeres i valgt Jotun-farge sammen med MDF-rammen. Unngå folieserier (AXSTAD, VALLSTENA, NICKEBO m.fl.) — folie slipper i kanter.",
       "C (premium, ~15 000 kr dører): Noremax Classic Style (norskprodusert METOD-shaker, valgfri NCS/Jotun-farge, fabrikklakk, forhåndsboret, 5–8 ukers ledetid). Null malerisiko på dørene.",
     ],
     recommendation:
-      "B hvis en maler uansett sprøyter MDF-innramming — da males dørene i samme operasjon (~3–6k ekstra for lakkering). C hvis budsjettet tåler ~10k mer: fabrikkhard finish og garantert fargematch. VEDDINGE+list-hacket frarådes (STENSUND har allerede profilen for 30 kr mer per dør).",
+      "B hvis en maler uansett sprøyter MDF-innramming — da males dørene i samme operasjon (~3–6k ekstra for lakkering). C hvis budsjettet tåler ~10k mer: fabrikkhard finish og garantert fargematch. Prøv alle seriene i veiviseren — dørene tegnes med riktig profil og farge der.",
   },
   {
     id: "farge",

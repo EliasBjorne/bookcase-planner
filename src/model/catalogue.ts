@@ -1,10 +1,12 @@
 import type { CatalogueItem } from "./types";
 import ikea from "../../catalogue/ikea-no.json";
 import vendors from "../../catalogue/vendors-no.json";
+import fronts from "../../catalogue/fronts-no.json";
 
 const all: CatalogueItem[] = [
   ...(ikea.items as CatalogueItem[]),
   ...(vendors.items as CatalogueItem[]),
+  ...(fronts.items as unknown as CatalogueItem[]),
 ];
 
 const byId = new Map(all.map((i) => [i.id, i]));

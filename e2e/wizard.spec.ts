@@ -22,12 +22,30 @@ test("choices update the live total and preview", async ({ page }) => {
   await expect(page.getByTestId("wizard-total")).toContainText(/20.?466/); // 15956 - billy(4300) + bbb(8240+570)
 });
 
-test("low bench disables STENSUND and auto-switches the front", async ({ page }) => {
+test("front step shows the whole METOD range and changes the drawn door", async ({ page }) => {
+  await page.goto("/#/bygg/3");
+  // At least 15 series + Noremax, each with a door thumbnail.
+  expect(await page.locator(".opt-card").count()).toBeGreaterThan(15);
+  expect(await page.locator(".door-thumb").count()).toBeGreaterThan(15);
+  // Default STENSUND renders shaker doors in the preview...
+  await expect(page.getByTestId("wizard-preview").locator('[data-door-style="shaker"]').first()).toBeVisible();
+  // ...switching to BODBYN svart redraws them as bevel...
+  await page.getByTestId("opt-bodbyn-svart").click();
+  await expect(page.getByTestId("wizard-preview").locator('[data-door-style="bevel"]').first()).toBeVisible();
+  await expect(page.getByTestId("wizard-total")).toContainText(/17.?516/); // 16751+765
+  // ...and a foil front keeps its factory colour in the preview markup.
+  await page.getByTestId("opt-nickebo-antrasitt").click();
+  await expect(page.getByTestId("wizard-preview").locator('[data-door-style="flat"]').first()).toBeVisible();
+  await page.screenshot({ path: "docs/screenshots/wizard-fronts.png", fullPage: true });
+});
+
+test("CORRECTED: shaker stays available on the low bench", async ({ page }) => {
   await page.goto("/#/bygg/1");
   await page.getByTestId("opt-low").click();
   await page.goto("/#/bygg/3");
-  await expect(page.getByTestId("opt-stensund")).toBeDisabled();
-  await expect(page.getByTestId("opt-veddinge")).toHaveClass(/active/);
+  await expect(page.getByTestId("opt-stensund-hvit")).toBeEnabled();
+  await page.getByTestId("opt-stensund-hvit").click();
+  await expect(page.getByTestId("wizard-total")).toContainText(/14.?700/); // audited low+shaker
 });
 
 test("full walkthrough reaches result with tabs, parts and share link", async ({ page }) => {
