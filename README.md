@@ -5,12 +5,15 @@ variant driver 3D-visning, målsatte front-/sidetegninger (SVG → PDF),
 handleliste med artikkelnumre og kappliste. Bygget fordi IKEAs to planleggere
 ikke kan sammenlikne METOD + BILLY/BESTÅ + ikke-IKEA-deler på ett sted.
 
-![V3 presentasjonsrender](docs/screenshots/v3-billy-render.png)
+![Veiviseren](docs/screenshots/wizard-step0.png)
 
-Views per variant: 3D, presentasjonsrender (prosedural, deterministisk, PNG-eksport),
-målsatte tegninger, deleliste, IKEA-overlevering — pluss breddeutforsker 300–360 cm
-og variantsammenlikning. Innfesting er dokumentert mot virkelige bygg i
-[docs/fastening.md](docs/fastening.md).
+**Bygg din løsning:** appen åpner i en 8-stegs veiviser (bredde → benkehøyde →
+overdel → dører → farge → knotter → benkeplate → belysning) med levende pris,
+delta per valg og research-forbehold på hvert kort. Resultatet (`#/din`) får
+full fane-sett — render, 3D, målsatte tegninger, deleliste, IKEA-overlevering —
+og en delbar lenke som koder hele oppsettet. Ferdige forslag (V1–V8) ligger
+under «Ferdige forslag»; innfesting er dokumentert mot virkelige bygg i
+[docs/fastening.md](docs/fastening.md), frontvalget i [docs/fronts.md](docs/fronts.md).
 
 ## Veggen
 
