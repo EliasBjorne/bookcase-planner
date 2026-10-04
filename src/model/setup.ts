@@ -2,6 +2,7 @@
  * walks through. Encodable to a short URL token for sharing. */
 
 import { FRONTS } from "./fronts";
+import { KNOBS } from "./knobs";
 
 export const WIDTHS = [3000, 3200, 3400, 3600] as const;
 export type WidthMm = (typeof WIDTHS)[number];
@@ -13,7 +14,8 @@ export interface Setup {
   /** A FrontOption id from src/model/fronts.ts. */
   front: string;
   color: "greige" | "linen" | "dark" | "wall";
-  knobs: "bagganas" | "beslag-uno";
+  /** A KnobOption id from src/model/knobs.ts. */
+  knobs: string;
   top: "ekbacken" | "mdf-painted";
   lighting: "none" | "spots6" | "spots9";
 }
@@ -24,7 +26,7 @@ export const DEFAULT_SETUP: Setup = {
   uppers: "billy",
   front: "stensund-hvit",
   color: "greige",
-  knobs: "bagganas",
+  knobs: "bagganas-messing",
   top: "ekbacken",
   lighting: "none",
 };
@@ -41,6 +43,7 @@ export function constraintError(s: Setup): string | null {
   if (s.bench === "low" && (s.uppers === "besta" || s.uppers === "string" || s.uppers === "metod"))
     return "BESTÅ/String/METOD-overdeler er bare regnet ut for høy benk (stable-høydene passer ikke 50.8-benken).";
   if (!FRONTS.some((f) => f.id === s.front)) return `Ukjent front: ${s.front}`;
+  if (!KNOBS.some((k) => k.id === s.knobs)) return `Ukjent knott: ${s.knobs}`;
   return null;
 }
 
@@ -77,7 +80,8 @@ const CODES: { [K in keyof Setup]: readonly (string | number)[] } = {
   uppers: ["billy", "bohus", "bbb", "besta", "metod", "string"],
   front: FRONTS.map((f) => f.id),
   color: ["greige", "linen", "dark", "wall"],
-  knobs: ["bagganas", "beslag-uno"],
+  // First two keep their old token indices so shared links stay valid.
+  knobs: KNOBS.map((k) => k.id),
   top: ["ekbacken", "mdf-painted"],
   lighting: ["none", "spots6", "spots9"],
 };

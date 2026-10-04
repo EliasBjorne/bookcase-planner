@@ -107,6 +107,7 @@ function drawDoor(
   color: string,
   knobSide: "l" | "r",
   knob: boolean,
+  knobColor = "#c9a227",
 ): string {
   const edge = shade(color, 0.78);
   const inset = Math.min(w, h) * 0.13;
@@ -145,7 +146,10 @@ function drawDoor(
       parts.push(rect(x + 1, y + 1, w - 2, 2.5, `fill="${shade(color, 1.07)}"`));
       break;
   }
-  if (knob) parts.push(`<circle cx="${r2(knobX)}" cy="${r2(y + h / 2)}" r="3.2" fill="url(#brass)"/>`);
+  if (knob)
+    parts.push(
+      `<circle cx="${r2(knobX)}" cy="${r2(y + h / 2)}" r="3.2" fill="${knobColor}" stroke="${shade(knobColor, 0.7)}" stroke-width="0.6"/>`,
+    );
   parts.push("</g>");
   return parts.join("");
 }
@@ -188,6 +192,27 @@ export function renderFront(d: Design): string {
     `<rect x="${r2(X(unitL) - 10)}" y="${r2(Y(unitTop) - 6)}" width="${r2(X(unitR - unitL) + 20)}" height="${r2(floorY - Y(unitTop) + 10)}" fill="#00000026" filter="url(#blur)"/>`,
   );
 
+  // Configured MITTLED shelf spots: warm pools of light in the top cells.
+  let spotOverlay = "";
+  const spotQty = d.extraParts.find((p) => p.itemId === "mittled-spot")?.qty ?? 0;
+  const shelfMods = mods.filter((m) => m.kind === "shelf");
+  if (spotQty > 0 && shelfMods.length > 0) {
+    const sl = Math.min(...shelfMods.map((m) => m.x));
+    const sr = Math.max(...shelfMods.map((m) => m.x + m.w));
+    const st = Math.max(...shelfMods.map((m) => m.y + m.h));
+    const spots: string[] = [`<g data-testid="spot-glow">`];
+    for (let i = 0; i < spotQty; i++) {
+      const cx = X(sl + ((i + 0.5) * (sr - sl)) / spotQty);
+      const cy = Y(st) + 8;
+      spots.push(
+        `<ellipse cx="${r2(cx)}" cy="${r2(cy + 26)}" rx="30" ry="42" fill="url(#spotglow)"/>`,
+        `<circle cx="${r2(cx)}" cy="${r2(cy)}" r="3" fill="#fff3cf" stroke="#d8c89a" stroke-width="0.8"/>`,
+      );
+    }
+    spots.push("</g>");
+    spotOverlay = spots.join("");
+  }
+
   const order: Record<string, number> = { panel: 1, filler: 1, plinth: 1, shelf: 2, cabinet: 2, top: 3 };
   mods.sort((a, b) => (order[a.kind] ?? 2) - (order[b.kind] ?? 2));
 
@@ -218,7 +243,9 @@ export function renderFront(d: Design): string {
       const style = m.doorStyle ?? "shaker";
       const doorCol = m.doorColorHex ?? shade(col, 1.04);
       for (let i = 0; i < doors; i++) {
-        g.push(drawDoor(style, x + i * dw, y, dw, h, doorCol, i % 2 === 0 ? "r" : "l", m.doorKnobs ?? true));
+        g.push(
+          drawDoor(style, x + i * dw, y, dw, h, doorCol, i % 2 === 0 ? "r" : "l", m.doorKnobs ?? true, m.knobColorHex),
+        );
       }
       continue;
     }
@@ -241,6 +268,8 @@ export function renderFront(d: Design): string {
     }
   }
 
+  g.push(spotOverlay);
+
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.ceil(W)} ${Math.ceil(H)}" data-testid="render-svg">
 <defs>
   <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
@@ -262,6 +291,7 @@ export function renderFront(d: Design): string {
     <stop offset="0" stop-color="#d8cdb6"/><stop offset="1" stop-color="#c6bAA2"/>
   </linearGradient>
   <radialGradient id="glow"><stop offset="0" stop-color="#fff3cf" stop-opacity="0.5"/><stop offset="1" stop-color="#fff3cf" stop-opacity="0"/></radialGradient>
+  <radialGradient id="spotglow"><stop offset="0" stop-color="#ffe9b8" stop-opacity="0.55"/><stop offset="1" stop-color="#ffe9b8" stop-opacity="0"/></radialGradient>
   <radialGradient id="brass"><stop offset="0" stop-color="#e3c268"/><stop offset="1" stop-color="#a07f2c"/></radialGradient>
   <filter id="blur"><feGaussianBlur stdDeviation="7"/></filter>
 </defs>

@@ -106,7 +106,7 @@ export const DECISIONS: Decision[] = [
       "ENERYDA 35 mm (135 kr/2-pk) — OBS: nikkelbelagt aluminium, ikke messing",
     ],
     recommendation:
-      "Referansebildets små runde knotter = BAGGANÄS 20 mm (budsjett) eller Beslag Design Uno (ekte messing som patinerer). Knottene er det folk tar på hver dag — 1 100 kr ekstra for ekte messing er god verdi. NB ved Noremax Classic Frame: 21 mm dørtykkelse er på grensen for IKEA-knotteskruer.",
+      "Referansebildets små runde knotter = BAGGANÄS 20 mm (budsjett) eller Beslag Design Uno (ekte messing som patinerer). 11 alternativer med ekte produktbilder ligger i veiviserens knott-steg (messing/svart/eik/krom/hvit). NB ved Noremax Classic Frame: 21 mm dørtykkelse er på grensen for IKEA-knotteskruer.",
   },
   {
     id: "belysning",

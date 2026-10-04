@@ -217,13 +217,38 @@ export function buildPhotoScene(d: Design, forRaster: boolean): PhotoScene {
         if (m.doorKnobs ?? true) {
           const knob = new THREE.Mesh(
             new THREE.SphereGeometry(0.011, 16, 16),
-            new THREE.MeshPhysicalMaterial({ color: 0xcaa13a, metalness: 1, roughness: 0.22 }),
+            new THREE.MeshPhysicalMaterial({ color: m.knobColorHex ?? "#caa13a", metalness: m.knobColorHex === "#f2f1ec" || m.knobColorHex === "#d9d9d6" ? 0.1 : 1, roughness: 0.22 }),
           );
           const kx = i % 2 === 0 ? m.x + (i + 1) * dw - 45 : m.x + i * dw + 45;
           knob.position.set(mm(kx), mm(m.y + m.h / 2), mm(m.z + m.d + 34));
           knob.castShadow = true;
           scene.add(knob);
         }
+      }
+    }
+  }
+
+  // Configured MITTLED shelf spots: emissive discs light the books for real.
+  const spotQty = d.extraParts.find((p) => p.itemId === "mittled-spot")?.qty ?? 0;
+  const shelfMods = d.modules.filter((m) => m.kind === "shelf");
+  if (spotQty > 0 && shelfMods.length > 0) {
+    const sl = Math.min(...shelfMods.map((m) => m.x));
+    const sr = Math.max(...shelfMods.map((m) => m.x + m.w));
+    const st = Math.max(...shelfMods.map((m) => m.y + m.h));
+    const sd = shelfMods[0].d;
+    for (let i = 0; i < spotQty; i++) {
+      const x = mm(sl + ((i + 0.5) * (sr - sl)) / spotQty);
+      const disc = new THREE.Mesh(
+        new THREE.CircleGeometry(0.024, 20),
+        new THREE.MeshPhysicalMaterial({ color: 0xfff1cf, emissive: 0xffe2ae, emissiveIntensity: 22 }),
+      );
+      disc.rotation.x = Math.PI / 2;
+      disc.position.set(x, mm(st) - 0.028, mm(sd / 2));
+      scene.add(disc);
+      if (forRaster) {
+        const p = new THREE.PointLight(0xffe2ae, 0.6, 1.2, 1.8);
+        p.position.set(x, mm(st) - 0.06, mm(sd / 2));
+        scene.add(p);
       }
     }
   }

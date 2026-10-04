@@ -18,6 +18,8 @@ export interface FrontOption {
   customColor?: boolean;
   integratedHandle?: boolean;
   sizes: { d4060: string; d6060: string; d4040: string };
+  imageUrl?: string;
+  productUrl?: string;
   caveat?: string;
   recommended?: boolean;
 }
@@ -31,6 +33,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#f2f1ec",
     sizes: { d4060: "stensund-door-40x60", d6060: "stensund-door-60x60", d4040: "front-stensund-hvit-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/stensund-dor-hvit__0944183_pe797177_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20450558/",
     recommended: true,
     caveat: "Males i valgt farge sammen med rammen — beste shaker per krone.",
   },
@@ -42,6 +46,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#c8d2c4",
     sizes: { d4060: "front-stensund-gronn-40x60", d6060: "front-stensund-gronn-60x60", d4040: "front-stensund-gronn-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/stensund-dor-lys-gronn__1087326_pe860709_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-70523915/",
   },
   {
     id: "noremax-custom",
@@ -52,6 +58,7 @@ export const FRONTS: FrontOption[] = [
     customColor: true,
     factoryHex: "#b4a894",
     sizes: { d4060: "noremax-classic-40x60", d6060: "noremax-classic-60x60", d4040: "noremax-classic-40x40" },
+    productUrl: "https://www.noremax.com/butikk/metod-kjokken/metod-classic-style/",
     caveat: "Fabrikklakkert i valgt Jotun/NCS-kode. 5–8 ukers ledetid.",
   },
   {
@@ -62,6 +69,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#ece5d6",
     sizes: { d4060: "front-bodbyn-offwhite-40x60", d6060: "front-bodbyn-offwhite-60x60", d4040: "front-bodbyn-offwhite-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/bodbyn-dor-offwhite__0633892_pe696159_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-90205484/",
     caveat: "Buet fylling — mykere profil enn shaker. Hard lakk: grundig matting før maling.",
   },
   {
@@ -72,6 +81,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#2e2d2b",
     sizes: { d4060: "front-bodbyn-svart-40x60", d6060: "front-bodbyn-svart-60x60", d4040: "front-bodbyn-svart-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/bodbyn-dor-svart__1331618_pe946044_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20568586/",
   },
   {
     id: "lerhyttan-lysgra",
@@ -81,6 +92,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#c9c9c4",
     sizes: { d4060: "front-lerhyttan-lysgra-40x60", d6060: "front-lerhyttan-lysgra-60x60", d4040: "front-lerhyttan-lysgra-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/lerhyttan-dor-lys-gra__0635842_pe697466_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-10461487/",
     caveat: "Synlig trestruktur gjennom tonet lakk — males med sliping + grunning.",
   },
   {
@@ -91,6 +104,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#3a3330",
     sizes: { d4060: "front-lerhyttan-svart-40x60", d6060: "front-lerhyttan-svart-60x60", d4040: "front-lerhyttan-svart-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/lerhyttan-dor-svartbeiset__0635836_pe697460_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20356056/",
   },
   {
     id: "axstad-gragronn",
@@ -100,6 +115,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#8e9a8c",
     sizes: { d4060: "front-axstad-gragronn-40x60", d6060: "front-axstad-gragronn-60x60", d4040: "front-axstad-gragronn-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/axstad-dor-gragronn__1398855_pe968144_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20563956/",
     caveat: "Folie — skal IKKE males (slipper i kanter). Fin fabrikkfarge i seg selv.",
   },
   {
@@ -110,6 +127,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#d9cdb8",
     sizes: { d4060: "front-havstorp-beige-40x60", d6060: "front-havstorp-beige-60x60", d4040: "front-havstorp-beige-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/havstorp-dor-beige__0975214_pe812685_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-80475264/",
     caveat: "Nærmeste fabrikk-grå-beige — men glatt, ikke shaker.",
   },
   {
@@ -120,6 +139,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#b5a387",
     sizes: { d4060: "front-havstorp-brunbeige-40x60", d6060: "front-havstorp-brunbeige-60x60", d4040: "front-havstorp-brunbeige-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/havstorp-dor-brunbeige__1224817_pe928249_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-90568408/",
   },
   {
     id: "havstorp-lysgra",
@@ -129,6 +150,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#cfd0cd",
     sizes: { d4060: "front-havstorp-lysgra-40x60", d6060: "front-havstorp-lysgra-60x60", d4040: "front-havstorp-lysgra-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/havstorp-dor-lys-gra__1219103_pe916856_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20568478/",
   },
   {
     id: "veddinge-hvit",
@@ -138,6 +161,8 @@ export const FRONTS: FrontOption[] = [
     paintable: true,
     factoryHex: "#f4f3ef",
     sizes: { d4060: "front-veddinge-hvit-40x60", d6060: "front-veddinge-hvit-60x60", d4040: "veddinge-door-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/veddinge-dor-hvit__0648548_pe704982_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-60205433/",
   },
   {
     id: "vallstena-hvit",
@@ -147,6 +172,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#f5f4f0",
     sizes: { d4060: "front-vallstena-hvit-40x60", d6060: "front-vallstena-hvit-60x60", d4040: "front-vallstena-hvit-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/vallstena-dor-hvit__1163491_pe890218_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-70541684/",
     caveat: "Billigst av alt — folie, males ikke.",
   },
   {
@@ -157,6 +184,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#ece7dc",
     sizes: { d4060: "front-enkoping-hvit-40x60", d6060: "front-enkoping-hvit-60x60", d4040: "front-enkoping-hvit-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/enkoeping-dor-hvit-tremonstret__1044251_pe842053_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-80505765/",
   },
   {
     id: "askersund-ask",
@@ -166,15 +195,19 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#e3d5bd",
     sizes: { d4060: "front-askersund-ask-40x60", d6060: "front-askersund-ask-60x60", d4040: "front-askersund-ask-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/askersund-dor-lyst-askemonster__0633747_pe696040_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-50331856/",
   },
   {
     id: "nickebo-antrasitt",
-    label: "NICKEBO matt antrasitt",
+    label: "NICKEBO matt grågrønn",
     style: "flat",
     surface: "Folie",
     paintable: false,
-    factoryHex: "#3b3d3e",
+    factoryHex: "#79837a",
     sizes: { d4060: "front-nickebo-antrasitt-40x60", d6060: "front-nickebo-antrasitt-60x60", d4040: "front-nickebo-antrasitt-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/nickebo-dor-matt-gragronn__1299553_pe936642_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-40562531/",
   },
   {
     id: "aspudden-hvit",
@@ -184,26 +217,32 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#f1efe8",
     sizes: { d4060: "front-aspudden-hvit-40x60", d6060: "front-aspudden-hvit-60x60", d4040: "front-aspudden-hvit-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/aspudden-dor-matt-hvit__1496821_pe1005658_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-20648847/",
     caveat: "Ny serie — overflate/malbarhet usjekket.",
   },
   {
     id: "terrsjo-brun",
-    label: "TERRSJÖ brun",
+    label: "TERRSJÖ rødbrun bølgemønster",
     style: "flat",
-    surface: "Ny serie — usjekket",
+    surface: "Bølgeprofilert front — males ikke",
     paintable: false,
-    factoryHex: "#7b5c42",
+    factoryHex: "#8a4f3b",
     sizes: { d4060: "front-terrsjo-brun-40x60", d6060: "front-terrsjo-brun-60x60", d4040: "front-terrsjo-brun-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/terrsjoe-dor-rodbrun-bolgemonster__1498090_pe1006165_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-30605381/",
     caveat: "Ny serie — overflate/malbarhet usjekket.",
   },
   {
     id: "voxtorp-beige",
-    label: "VOXTORP matt beige",
+    label: "VOXTORP eikemønstret",
     style: "flat",
-    surface: "Matt folie, avrundede kanter",
+    surface: "Matt folie m/ eikemønster, avrundede kanter",
     paintable: false,
-    factoryHex: "#d6c9b2",
+    factoryHex: "#b08a63",
     sizes: { d4060: "front-voxtorp-beige-40x60", d6060: "front-voxtorp-beige-60x60", d4040: "front-voxtorp-beige-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/voxtorp-dor-eikemonstret__1210338_pe909661_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-50559142/",
     caveat: "40x40-varianten kan være hvit — sjekk.",
   },
   {
@@ -214,6 +253,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#f6f6f4",
     sizes: { d4060: "front-ringhult-hvit-40x60", d6060: "front-ringhult-hvit-60x60", d4040: "front-ringhult-hvit-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/ringhult-dor-hoyglans-hvit__0646087_pe703922_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-90205097/",
   },
   {
     id: "upplov-beige",
@@ -224,6 +265,8 @@ export const FRONTS: FrontOption[] = [
     integratedHandle: true,
     factoryHex: "#cbb9a0",
     sizes: { d4060: "front-upplov-beige-40x60", d6060: "front-upplov-beige-60x60", d4040: "front-upplov-beige-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/upploev-dor-matt-mork-beige__1108675_pe869538_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-90470478/",
     caveat: "Integrert grep — knotter unødvendige (fjernes fra listen).",
   },
   {
@@ -234,6 +277,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#8a5f3f",
     sizes: { d4060: "front-sinarp-brun-40x60", d6060: "front-sinarp-brun-60x60", d4040: "front-sinarp-brun-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/sinarp-dor-brun__0943212_pe796820_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-90404153/",
     caveat: "Finér — males ikke.",
   },
   {
@@ -244,6 +289,8 @@ export const FRONTS: FrontOption[] = [
     paintable: false,
     factoryHex: "#c9a06a",
     sizes: { d4060: "front-forsbacka-eik-40x60", d6060: "front-forsbacka-eik-60x60", d4040: "front-forsbacka-eik-40x40" },
+    imageUrl: "https://www.ikea.com/no/no/images/products/forsbacka-dor-eik__1209289_pe909122_s5.jpg",
+    productUrl: "https://www.ikea.com/no/no/p/-40565233/",
   },
 ];
 

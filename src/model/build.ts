@@ -1,6 +1,7 @@
 import type { Design, ExtraPart, Module } from "./types";
 import { COLOR_HEX, constraintError, encodeSetup, type Setup } from "./setup";
 import { getFront } from "./fronts";
+import { getKnob } from "./knobs";
 import { BASE_WIDTHS, BILLY_WIDTHS, bestCombo } from "./widths";
 import {
   ROOM,
@@ -228,12 +229,13 @@ export function buildDesign(s: Setup): Design {
       label: `Dører (${front.label})`,
     })),
   ];
+  const knob = getKnob(s.knobs);
   if (front.integratedHandle) {
     extraParts = extraParts.filter((p) => p.itemId !== "bagganas-knob-brass-2pk");
-  } else if (s.knobs === "beslag-uno") {
+  } else {
     extraParts = extraParts.map((p) =>
       p.itemId === "bagganas-knob-brass-2pk"
-        ? { ...p, itemId: "beslag-design-uno-knob", qty: doorCount, label: "Uno-knotter, ekte messing" }
+        ? { ...p, itemId: knob.itemId, qty: doorCount, label: knob.label }
         : p,
     );
   }
@@ -273,6 +275,7 @@ export function buildDesign(s: Setup): Design {
       next.doorStyle = front.style;
       next.doorColorHex = doorColor;
       next.doorKnobs = !front.integratedHandle;
+      next.knobColorHex = knob.colorHex;
     }
     return next;
   });

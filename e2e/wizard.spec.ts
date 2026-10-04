@@ -39,6 +39,31 @@ test("front step shows the whole METOD range and changes the drawn door", async 
   await page.screenshot({ path: "docs/screenshots/wizard-fronts.png", fullPage: true });
 });
 
+test("knob step: many real options, photo under the illustration, price reacts", async ({ page }) => {
+  await page.goto("/#/bygg/5");
+  expect(await page.locator(".opt-card").count()).toBeGreaterThan(8);
+  expect(await page.locator(".opt-card img.opt-photo").count()).toBeGreaterThan(7);
+  await expect(page.getByTestId("real-photo").locator("img")).toBeVisible();
+  await page.getByTestId("opt-gubbarp-hvit").click();
+  await expect(page.getByTestId("wizard-total")).toContainText(/16.?431/);
+  await page.screenshot({ path: "docs/screenshots/wizard-knobs.png", fullPage: true });
+});
+
+test("front step shows the real product photo of the selected door", async ({ page }) => {
+  await page.goto("/#/bygg/3");
+  await expect(page.getByTestId("real-photo").locator("img")).toBeVisible();
+  await page.getByTestId("opt-bodbyn-offwhite").click();
+  await expect(page.getByTestId("real-photo")).toContainText("BODBYN offwhite");
+});
+
+test("lighting choice shows glow in the illustration and the MITTLED photo", async ({ page }) => {
+  await page.goto("/#/bygg/7");
+  await page.getByTestId("opt-spots6").click();
+  await expect(page.getByTestId("wizard-preview").locator('[data-testid="spot-glow"]')).toBeVisible();
+  await expect(page.getByTestId("real-photo")).toContainText("MITTLED");
+  await page.screenshot({ path: "docs/screenshots/wizard-lighting.png", fullPage: true });
+});
+
 test("CORRECTED: shaker stays available on the low bench", async ({ page }) => {
   await page.goto("/#/bygg/1");
   await page.getByTestId("opt-low").click();

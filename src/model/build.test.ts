@@ -75,7 +75,21 @@ describe("constraints and geometry", () => {
     const foil = buildDesign(setup({ front: "nickebo-antrasitt" })); // foil, not paintable
     const cabF = foil.modules.find((m) => m.kind === "cabinet" && m.doors)!;
     expect(cabF.doorStyle).toBe("flat");
-    expect(cabF.doorColorHex).toBe("#3b3d3e"); // factory anthracite survives colour choice
+    expect(cabF.doorColorHex).toBe("#79837a"); // factory matt grågrønn survives colour choice
+  });
+
+  it("knob choice changes price and rendered colour (GUBBARP 10 kr/2-pk)", () => {
+    const d = buildDesign(setup({ knobs: "gubbarp-hvit" }));
+    // 16751 − BAGGANÄS 360 + GUBBARP 4 packs × 10 = 16431
+    expect(partsList(d).totalNok).toBe(16431);
+    const cab = d.modules.find((m) => m.kind === "cabinet" && m.doors)!;
+    expect(cab.knobColorHex).toBe("#f2f1ec");
+  });
+
+  it("MITTLED spots appear in the SVG render when configured", async () => {
+    const { renderFront } = await import("../views/render");
+    expect(renderFront(buildDesign(setup({ lighting: "spots6" })))).toContain("spot-glow");
+    expect(renderFront(buildDesign(setup({})))).not.toContain("spot-glow");
   });
 
   it("every legal width×uppers combo validates without hard errors", () => {

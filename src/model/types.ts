@@ -12,6 +12,7 @@ export interface CatalogueItem {
   priceNok?: number;
   packQty?: number;
   url?: string;
+  imageUrl?: string;
   verified: boolean;
   verifiedAt?: string;
   notes?: string;
@@ -69,6 +70,7 @@ export interface Module {
   doorStyle?: "shaker" | "flat" | "bevel" | "country" | "gloss";
   doorColorHex?: string;
   doorKnobs?: boolean;
+  knobColorHex?: string;
   cut?: CutInstruction;
   colorHex?: string;
 }

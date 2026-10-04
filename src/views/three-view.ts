@@ -113,6 +113,29 @@ export class ThreeView {
       this.designGroup.add(dl);
     }
 
+    // Configured MITTLED shelf spots: small glowing discs + warm point lights.
+    const spotQty = d.extraParts.find((p) => p.itemId === "mittled-spot")?.qty ?? 0;
+    const shelfMods = d.modules.filter((m) => m.kind === "shelf");
+    if (spotQty > 0 && shelfMods.length > 0) {
+      const sl = Math.min(...shelfMods.map((m) => m.x));
+      const sr = Math.max(...shelfMods.map((m) => m.x + m.w));
+      const st = Math.max(...shelfMods.map((m) => m.y + m.h));
+      const sd = shelfMods[0].d;
+      for (let i = 0; i < spotQty; i++) {
+        const x = (sl + ((i + 0.5) * (sr - sl)) / spotQty) / 1000;
+        const disc = new THREE.Mesh(
+          new THREE.CircleGeometry(0.03, 20),
+          new THREE.MeshBasicMaterial({ color: 0xffe9b8 }),
+        );
+        disc.rotation.x = Math.PI / 2;
+        disc.position.set(x, st / 1000 - 0.03, sd / 2000);
+        this.designGroup.add(disc);
+        const p = new THREE.PointLight(0xffe2ae, 0.55, 1.2, 1.8);
+        p.position.set(x, st / 1000 - 0.06, sd / 2000);
+        this.designGroup.add(p);
+      }
+    }
+
     // Shaft at the right end of the free wall.
     const shaft = this.box(d.room.shaftWidthMm, d.room.soffitHeightMm, d.room.shaftDepthMm, "#e8e2d8");
     shaft.position.set(wallW + d.room.shaftWidthMm / 2000, soffitH / 2, d.room.shaftDepthMm / 2000);
@@ -144,7 +167,7 @@ export class ThreeView {
           if (m.doorKnobs ?? true) {
             const knob = new THREE.Mesh(
               new THREE.SphereGeometry(0.011, 12, 12),
-              new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.7, roughness: 0.3 }),
+              new THREE.MeshStandardMaterial({ color: m.knobColorHex ?? "#c9a227", metalness: 0.7, roughness: 0.3 }),
             );
             const kx = i % 2 === 0 ? m.x + (i + 1) * dw - 40 : m.x + i * dw + 40;
             knob.position.set(kx / 1000, (m.y + m.h / 2) / 1000, (m.z + m.d + 32) / 1000);

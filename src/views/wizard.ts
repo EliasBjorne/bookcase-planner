@@ -1,7 +1,9 @@
 import { buildDesign } from "../model/build";
 import { shade } from "../model/color";
 import { partsList } from "../model/cost";
-import { FRONTS } from "../model/fronts";
+import { FRONTS, getFront } from "../model/fronts";
+import { KNOBS, getKnob } from "../model/knobs";
+import { getItem } from "../model/catalogue";
 import {
   COLOR_HEX,
   constraintError,
@@ -41,6 +43,7 @@ interface Option {
   recommended?: boolean;
   swatch?: string;
   thumb?: string;
+  photo?: string;
 }
 
 interface Step {
@@ -112,11 +115,16 @@ export const STEPS: Step[] = [
   {
     field: "knobs",
     title: "Knotter",
-    help: "Det eneste man tar på hver dag.",
-    options: [
-      { value: "bagganas", label: "BAGGANÄS 20 mm", desc: "Messingfarget (belagt stål), 90 kr/2-pk.", recommended: true },
-      { value: "beslag-uno", label: "Beslag Design Uno 30 mm", desc: "EKTE ubehandlet messing som patinerer, ~185 kr/stk.", caveat: "Pris fra søk — sjekk forhandler." },
-    ],
+    help: "Det eneste man tar på hver dag. Ekte produktbilder på kortene og under illustrasjonen; fargen følger med i tegning, 3D og Foto.",
+    options: KNOBS.map((k) => ({
+      value: k.id,
+      label: k.label,
+      desc: k.desc,
+      caveat: k.caveat,
+      recommended: k.recommended,
+      photo: k.imageUrl,
+      swatch: k.imageUrl ? undefined : k.colorHex,
+    })),
   },
   {
     field: "top",
@@ -166,6 +174,7 @@ export function wizardHtml(setup: Setup, stepIdx: number): string {
       return `
       <button class="opt-card ${active ? "active" : ""}" data-field="${step.field}" data-value="${o.value}" ${err ? `disabled title="${err}"` : ""} data-testid="opt-${o.value}">
         ${o.thumb ?? ""}
+        ${o.photo ? `<img class="opt-photo" src="${o.photo}" alt="" loading="lazy" referrerpolicy="no-referrer"/>` : ""}
         ${o.swatch ? `<span class="swatch" style="background:${o.swatch}"></span>` : ""}
         <span class="opt-label">${o.label} ${o.recommended ? `<span class="chip st-done">anbefalt</span>` : ""}</span>
         <span class="opt-desc">${o.desc}</span>
@@ -204,9 +213,44 @@ export function wizardHtml(setup: Setup, stepIdx: number): string {
     </div>
     <aside class="wizard-preview">
       <div class="preview-render" data-testid="wizard-preview">${previewSvg(setup)}</div>
+      ${realPhotoStrip(setup, step.field)}
       <div class="preview-total">Kjøpte deler: <strong data-testid="wizard-total">${nok(current)}</strong></div>
       <p class="note">MDF, maling og montering kommer i tillegg. Alle valg kan endres når som helst.</p>
     </aside>
+  </div>`;
+}
+
+/** Real product photo of the current selection, shown under the illustration
+ * on the steps where a photo exists (doors, knobs, lighting). Hotlinked from
+ * the vendor with a source link — not redistributed. */
+function realPhotoStrip(setup: Setup, field: keyof Setup): string {
+  let img: string | undefined;
+  let label = "";
+  let link: string | undefined;
+  if (field === "front") {
+    const f = getFront(setup.front);
+    img = f.imageUrl;
+    label = f.label;
+    link = f.productUrl;
+  } else if (field === "knobs") {
+    const k = getKnob(setup.knobs);
+    img = k.imageUrl;
+    label = k.label;
+    link = k.productUrl;
+  } else if (field === "lighting" && setup.lighting !== "none") {
+    const item = getItem("mittled-spot");
+    img = item.imageUrl;
+    label = item.name;
+    link = item.url;
+  }
+  if (!img && !link) return "";
+  return `
+  <div class="real-photo" data-testid="real-photo">
+    ${img ? `<img src="${img}" alt="${label}" loading="eager" referrerpolicy="no-referrer"/>` : ""}
+    <div class="real-photo-caption">
+      <span>${label}</span>
+      ${link ? `<a href="${link}" target="_blank" rel="noreferrer">Se hos leverandør →</a>` : ""}
+    </div>
   </div>`;
 }
 
