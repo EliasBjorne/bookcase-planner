@@ -304,3 +304,11 @@ button:hover { filter: brightness(1.08); }
   #content { padding: 0; }
   body { background: white; }
 }
+
+.build-stamp {
+  color: #b5ab99;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  margin-top: 16px;
+  user-select: all;
+}

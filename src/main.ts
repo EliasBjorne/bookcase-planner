@@ -114,7 +114,8 @@ function renderSidebar(route: Route): void {
         ).join("")}
       </nav>
     </details>
-    <div id="violations"></div>`;
+    <div id="violations"></div>
+    <p class="build-stamp" title="Bygg-versjon — stemmer ikke denne med siste endring, last siden på nytt (Cmd+Shift+R)">${__BUILD_INFO__}</p>`;
 }
 
 function designPage(design: Design, route: Route, isDin: boolean): void {
