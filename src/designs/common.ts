@@ -236,9 +236,9 @@ export function mdfFraming(
   return [
     {
       id: "crown",
-      label: `Gesims/losholt mot himling (${crownH} mm)`,
+      label: `Toppforing mot nedhakket — tetter ${crownH} mm glippe mellom hylletopp og tak`,
       kind: "panel",
-      source: { type: "custom", material: "MDF, skjæres på stedet" },
+      source: { type: "custom", material: "MDF — scribes (tilpasses) mot taket på stedet, siden taket aldri er helt i vater" },
       x: unitX,
       y: upperTop,
       z: 0,
