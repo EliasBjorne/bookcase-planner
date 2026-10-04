@@ -274,6 +274,12 @@ button:hover { filter: brightness(1.08); }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #0002; }
 .door-thumb { border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 
+.photo-wrap { max-width: 1280px; }
+.photo-canvas { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: #0e0d0b; }
+.photo-canvas canvas { display: block; width: 100%; height: auto; }
+.photo-bar { display: flex; align-items: center; gap: 14px; margin: 10px 0; }
+#photo-status { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
 .wizard-nav { display: flex; justify-content: space-between; gap: 10px; }
 
 /* ---------- Responsive ---------- */

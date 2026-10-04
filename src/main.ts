@@ -16,14 +16,16 @@ import { partsHtml, violationsHtml } from "./views/parts";
 import { compareHtml } from "./views/compare";
 import { handoffHtml, wireHandoff } from "./views/handoff";
 import { renderHtml, wireRender } from "./views/render";
+import { mountPhoto, photoHtml, type PhotoView } from "./views/photo";
 import { widthsHtml } from "./views/widths";
 import { decisionsHtml } from "./views/decisions";
 import { STEPS, wizardHtml, wireWizard } from "./views/wizard";
 
-type ViewId = "render" | "3d" | "tegning" | "deler" | "handoff";
+type ViewId = "render" | "foto" | "3d" | "tegning" | "deler" | "handoff";
 
 const VIEWS: { id: ViewId; label: string }[] = [
   { id: "render", label: "Render" },
+  { id: "foto", label: "Foto" },
   { id: "3d", label: "3D" },
   { id: "tegning", label: "Tegninger" },
   { id: "deler", label: "Deleliste" },
@@ -39,6 +41,7 @@ const GLOBALS: { id: string; label: string }[] = [
 const content = document.getElementById("content")!;
 const sidebar = document.getElementById("sidebar")!;
 let threeView: ThreeView | null = null;
+let photoView: PhotoView | null = null;
 let setup: Setup = loadSetup();
 
 const nok = (n: number): string => `${n.toLocaleString("no")} kr`;
@@ -144,6 +147,11 @@ function designPage(design: Design, route: Route, isDin: boolean): void {
       threeView.show(design);
       break;
     }
+    case "foto": {
+      content.innerHTML = `${header}${photoHtml()}`;
+      photoView = mountPhoto(content, design);
+      break;
+    }
     case "tegning": {
       content.innerHTML = `${header}
         <div class="elevation-wrap" data-testid="front-elevation">${frontElevation(design)}</div>
@@ -183,6 +191,8 @@ function render(): void {
   renderSidebar(route);
   threeView?.dispose();
   threeView = null;
+  photoView?.dispose();
+  photoView = null;
 
   switch (route.page) {
     case "wizard": {

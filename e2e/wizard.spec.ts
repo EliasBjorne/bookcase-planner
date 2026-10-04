@@ -66,6 +66,13 @@ test("full walkthrough reaches result with tabs, parts and share link", async ({
   await expect(page.getByTestId("share-link")).toBeVisible();
 });
 
+test("photo view mounts and accumulates samples (or falls back gracefully)", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/#/v3-billy/foto");
+  await expect(page.locator("[data-testid=photo-canvas] canvas")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId("photo-status")).toContainText(/lysberegning|Forenklet/, { timeout: 30_000 });
+});
+
 test("share token restores the exact setup in a fresh session", async ({ page }) => {
   // Token: width=3600(3), bench=high(0), uppers=bbb(2), front=noremax(2),
   // color=dark(2), knobs=beslag-uno(1), top=mdf-painted(1), lighting=spots6(1).
