@@ -45,7 +45,9 @@ export class PhotoView {
         this.pt = new WebGLPathTracer(this.renderer);
         this.pt.bounces = 5;
         this.pt.renderScale = Math.min(1, 900 / w);
-        this.pt.tiles.set(2, 2);
+        // Small tiles keep the main thread responsive on weak GPUs.
+        this.pt.tiles.set(3, 3);
+        this.pt.dynamicLowRes = true;
         this.pt.setScene(scene, camera);
         const loop = (): void => {
           if (this.pt!.samples < TARGET_SAMPLES) {
