@@ -54,7 +54,7 @@ for (const id of DESIGNS) {
 }
 
 test("comparison shows all seven variants", async ({ page }) => {
-  await page.goto(`/#/v1-bohus/sammenlikn`);
+  await page.goto(`/#/sammenlikn`);
   const table = page.locator("table.compare");
   await expect(table).toBeVisible();
   for (const id of ["V1", "V2", "V3", "V4", "V5", "V6", "V7"]) {
@@ -64,7 +64,7 @@ test("comparison shows all seven variants", async ({ page }) => {
 });
 
 test("width explorer lists 7 widths with exact-fit notes", async ({ page }) => {
-  await page.goto(`/#/v3-billy/bredder`);
+  await page.goto(`/#/bredder`);
   const table = page.getByTestId("widths-table");
   await expect(table).toBeVisible();
   await expect(table.locator("tbody tr")).toHaveCount(7);
@@ -74,7 +74,7 @@ test("width explorer lists 7 widths with exact-fit notes", async ({ page }) => {
 });
 
 test("decisions checklist renders grouped by phase", async ({ page }) => {
-  await page.goto(`/#/v3-billy/beslutninger`);
+  await page.goto(`/#/beslutninger`);
   const list = page.getByTestId("decisions-list");
   await expect(list).toBeVisible();
   await expect(list).toContainText("Frontstrategi");

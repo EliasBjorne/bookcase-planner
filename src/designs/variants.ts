@@ -10,48 +10,10 @@ import {
   mdfFraming,
   metodBase,
   metodBaseLow,
+  shelfRun,
   SITE_NOTES,
 } from "./common";
 
-const GREIGE = "#b4a894";
-
-function shelfRun(
-  idPrefix: string,
-  label: string,
-  itemId: string | null,
-  opts: {
-    x: number;
-    y: number;
-    w: number;
-    d: number;
-    h: number;
-    units?: number;
-    columns: number;
-    shelves: number;
-    cutNote?: string;
-    material?: string;
-  },
-): Module {
-  return {
-    id: idPrefix,
-    label,
-    kind: "shelf",
-    source: itemId
-      ? { type: "catalogue", itemId, qty: opts.units ?? 1 }
-      : { type: "custom", material: opts.material ?? "19 mm MDF, malt" },
-    x: opts.x,
-    y: opts.y,
-    z: 0,
-    w: opts.w,
-    d: opts.d,
-    h: opts.h,
-    unitsAcross: opts.units,
-    columns: opts.columns,
-    shelves: opts.shelves,
-    cut: opts.cutNote ? { note: opts.cutNote } : undefined,
-    colorHex: GREIGE,
-  };
-}
 
 /** V1 — METOD base + 4× Bohus Base bookcases cut to height, fully MDF-faced. */
 function v1(): Design {

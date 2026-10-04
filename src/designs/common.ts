@@ -145,21 +145,26 @@ export function doorHardware(doorCount: number): ExtraPart[] {
   ];
 }
 
-/** Low bench (benk i sittehøyde, som livingetc-METOD-hacken): 4× METOD
- * veggskap 80×37×40 på sokkel, 100 mm foring per side. Kun 40×40-dører
- * finnes i denne høyden (glatte, ingen shaker) — VEDDINGE. 80-gavlene
- * flukter perfekt med 80-brede overdeler. */
-export function metodBaseLow(): { modules: Module[]; extraParts: ExtraPart[] } {
+/** Low bench (benk i sittehøyde, som livingetc-METOD-hacken): METOD veggskap
+ * 80×37×40 på sokkel. Kun 40×40-dører finnes i denne høyden (glatte, ingen
+ * shaker). 80-gavlene flukter perfekt med 80-brede overdeler. Parametric in
+ * width: 80-frames only + fillers. */
+export function metodBaseLow(
+  unitX: number = UNIT_X,
+  targetWidth: number = TARGET_WIDTH,
+): { modules: Module[]; extraParts: ExtraPart[] } {
   const frameH = 400;
+  const frames = Math.floor(targetWidth / 800);
+  const runW = frames * 800;
+  const sideFill = (targetWidth - runW) / 2;
   const modules: Module[] = [];
-  const sideFill = 100;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < frames; i++) {
     modules.push({
       id: `base-${i}`,
       label: `METOD 80 lav`,
       kind: "cabinet",
       source: { type: "catalogue", itemId: "metod-wall-80x37x40", qty: 1 },
-      x: UNIT_X + sideFill + i * 800,
+      x: unitX + sideFill + i * 800,
       y: LEG_H,
       z: 0,
       w: 800,
@@ -169,43 +174,50 @@ export function metodBaseLow(): { modules: Module[]; extraParts: ExtraPart[] } {
       colorHex: GREIGE,
     });
   }
+  if (sideFill > 0)
+    modules.push(
+      filler("bfill-l", unitX, LEG_H, frameH, sideFill, BASE_FRAME_D),
+      filler("bfill-r", unitX + sideFill + runW, LEG_H, frameH, sideFill, BASE_FRAME_D),
+    );
   modules.push(
-    filler("bfill-l", UNIT_X, LEG_H, frameH, sideFill, BASE_FRAME_D),
-    filler("bfill-r", UNIT_X + sideFill + 3200, LEG_H, frameH, sideFill, BASE_FRAME_D),
     {
       id: "plinth",
       label: "Sokkel (malt MDF)",
       kind: "plinth",
       source: { type: "custom", material: "19 mm MDF, malt" },
-      x: UNIT_X + 30,
+      x: unitX + 30,
       y: 0,
       z: 0,
-      w: TARGET_WIDTH - 60,
+      w: targetWidth - 60,
       d: BASE_FRAME_D - 50,
       h: LEG_H,
       colorHex: "#9c9183",
     },
     {
       id: "top",
-      label: "Benkeplate 340×45 (sittebenk)",
+      label: `Benkeplate ${targetWidth / 10}×45 (sittebenk)`,
       kind: "top",
-      source: { type: "catalogue", itemId: "ekbacken-custom-top", qty: 4 },
-      x: UNIT_X,
+      source: {
+        type: "catalogue",
+        itemId: "ekbacken-custom-top",
+        qty: Math.ceil(targetWidth / 1000),
+      },
+      x: unitX,
       y: LEG_H + frameH,
       z: 0,
-      w: TARGET_WIDTH,
+      w: targetWidth,
       d: TOP_D,
       h: TOP_H,
-      cut: { note: "EKBACKEN spesialtilpasset 3400×450 mm, eller snekkerlevert plate" },
+      cut: { note: `EKBACKEN spesialtilpasset ${targetWidth}×450 mm, eller snekkerlevert plate` },
       colorHex: "#c4b9a6",
     },
   );
   return {
     modules,
     extraParts: [
-      { itemId: "metod-leg-8cm-2pk", qty: 16, label: "METOD ben (4 per skrog)" },
-      { itemId: "veddinge-door-40x40", qty: 8, label: "Dører (glatte — shaker finnes ikke i 40-høyde)" },
-      ...doorHardware(8),
+      { itemId: "metod-leg-8cm-2pk", qty: frames * 4, label: "METOD ben (4 per skrog)" },
+      { itemId: "veddinge-door-40x40", qty: frames * 2, label: "Dører (glatte — shaker finnes ikke i 40-høyde)" },
+      ...doorHardware(frames * 2),
       // 40-høye stammer: ett rom, ingen ekstra hylle.
     ],
   };
@@ -236,6 +248,45 @@ export function mdfFraming(
       colorHex: GREIGE,
     },
   ];
+}
+
+export function shelfRun(
+  idPrefix: string,
+  label: string,
+  itemId: string | null,
+  opts: {
+    x: number;
+    y: number;
+    w: number;
+    d: number;
+    h: number;
+    units?: number;
+    columns: number;
+    shelves: number;
+    cutNote?: string;
+    material?: string;
+    colorHex?: string;
+  },
+): Module {
+  return {
+    id: idPrefix,
+    label,
+    kind: "shelf",
+    source: itemId
+      ? { type: "catalogue", itemId, qty: opts.units ?? 1 }
+      : { type: "custom", material: opts.material ?? "19 mm MDF, malt" },
+    x: opts.x,
+    y: opts.y,
+    z: 0,
+    w: opts.w,
+    d: opts.d,
+    h: opts.h,
+    unitsAcross: opts.units,
+    columns: opts.columns,
+    shelves: opts.shelves,
+    cut: opts.cutNote ? { note: opts.cutNote } : undefined,
+    colorHex: opts.colorHex ?? GREIGE,
+  };
 }
 
 export function filler(id: string, x: number, y: number, h: number, w: number, d: number): Module {
