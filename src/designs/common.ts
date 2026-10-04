@@ -238,7 +238,7 @@ export function mdfFraming(
       id: "crown",
       label: `Toppforing mot nedhakket — tetter ${crownH} mm glippe mellom hylletopp og tak`,
       kind: "panel",
-      source: { type: "custom", material: "MDF — scribes (tilpasses) mot taket på stedet, siden taket aldri er helt i vater" },
+      source: { type: "custom", material: "MDF — scribes mot taket på stedet. Glippa er nødvendig monteringsklaring (skroget må kunne løftes på plass) og toleranse for tak som ikke er i vater; lista skjuler også topplekta/veltesikringen." },
       x: unitX,
       y: upperTop,
       z: 0,
