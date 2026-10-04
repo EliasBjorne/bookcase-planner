@@ -45,16 +45,17 @@ export const DECISIONS: Decision[] = [
   },
   {
     id: "front-strategi",
-    title: "Frontstrategi for METOD-basen",
+    title: "Frontstrategi for METOD-basen (research ferdig — se docs/fronts.md)",
     phase: "1 · Før bestilling",
     status: "åpen",
     owner: "Familien",
     options: [
-      "A: IKEA-fabrikkfarge (f.eks. STENSUND/BODBYN) — MDF-rammen males i samme farge",
-      "B: Mal ALT i én farge — krever fronter som tåler maling (folie er risikabelt)",
-      "C: Spesialfronter til METOD i eksakt NCS-farge (Noremax/&shufl/Superfront) — dyrest, null maling av fronter",
+      "A: IKEA-fabrikkfarge — FALLER BORT for grå-beige shaker: STENSUND finnes kun i hvit/lys grønn i Norge, BODBYN kun offwhite/svart, VEDHAMN selges ikke her. Nærmeste fabrikk-grå-beige er HAVSTORP — men den er glatt, ikke shaker.",
+      "B (verdi, ~4 500 kr + lakkering): STENSUND hvit (PU-malt MDF, ekte shaker-profil, trygg å overmale) sprøytelakkeres i valgt Jotun-farge sammen med MDF-rammen. Unngå folieserier (AXSTAD m.fl.) — folie slipper i kanter.",
+      "C (premium, ~15 000 kr dører): Noremax Classic Style (norskprodusert METOD-shaker, valgfri NCS/Jotun-farge, fabrikklakk, forhåndsboret, 5–8 ukers ledetid). Null malerisiko på dørene.",
     ],
-    recommendation: "Under research — oppdateres med verifiserte priser/materialer. Se docs/fronts.md.",
+    recommendation:
+      "B hvis en maler uansett sprøyter MDF-innramming — da males dørene i samme operasjon (~3–6k ekstra for lakkering). C hvis budsjettet tåler ~10k mer: fabrikkhard finish og garantert fargematch. VEDDINGE+list-hacket frarådes (STENSUND har allerede profilen for 30 kr mer per dør).",
   },
   {
     id: "farge",
@@ -88,9 +89,10 @@ export const DECISIONS: Decision[] = [
     id: "hengsler",
     title: "Hengsler (følger IKKE med METOD-dørene)",
     phase: "1 · Før bestilling",
-    status: "åpen",
+    status: "avgjort",
     owner: "Familien",
-    recommendation: "Under research — UTRUSTA med/uten demping, antall per dør, priser. Legges i delelisten når verifisert.",
+    recommendation:
+      "UTRUSTA 110° med innebygd demper (805.248.82, 195 kr/2-pk), 2 per dør — nå lagt inn i alle delelistene (8 dører = 1 560 kr). Udempet 110° finnes ikke i NO-sortimentet, så valget tar seg selv.",
   },
   {
     id: "knotter",
@@ -98,7 +100,13 @@ export const DECISIONS: Decision[] = [
     phase: "1 · Før bestilling",
     status: "åpen",
     owner: "Familien",
-    recommendation: "Under research — BAGGANÄS/ENERYDA + ett kvalitetsalternativ. Referansebildet har små runde messingknotter.",
+    options: [
+      "BAGGANÄS 20 mm messingfarget (90 kr/2-pk, messingbelagt stål) — i delelisten nå, 360 kr for 8",
+      "Beslag Design Uno 30 mm UBEHANDLET messing (~185 kr/stk, patinerer vakkert) — ekte messing, ~1 500 kr for 8",
+      "ENERYDA 35 mm (135 kr/2-pk) — OBS: nikkelbelagt aluminium, ikke messing",
+    ],
+    recommendation:
+      "Referansebildets små runde knotter = BAGGANÄS 20 mm (budsjett) eller Beslag Design Uno (ekte messing som patinerer). Knottene er det folk tar på hver dag — 1 100 kr ekstra for ekte messing er god verdi. NB ved Noremax Classic Frame: 21 mm dørtykkelse er på grensen for IKEA-knotteskruer.",
   },
   {
     id: "belysning",
@@ -108,11 +116,11 @@ export const DECISIONS: Decision[] = [
     owner: "Familien + elektriker",
     options: [
       "Ingen — downlights i nedhakket er nok",
-      "Plug-in LED-lister i hyllene (uten elektriker hvis stikk finnes)",
-      "Fast installasjon (krever elektriker — bestill tidlig)",
+      "MITTLED-spotter i hyllene: 6 spotter + TRÅDFRI-driver + FÖRNIMMA ≈ 1 580 kr, plugges i stikk = LOVLIG uten elektriker",
+      "Fast 230V-tilkobling eller nytt/flyttet stikk = krever registrert elektriker (DSB-regler)",
     ],
     recommendation:
-      "Under research. Uansett: mål downlight-avstand mot overdelens forkant (28 cm BILLY ligger ~2 cm bak downlights på 30 cm).",
+      "Referansebildets glød kommer fra belyste hyller. MITTLED plug-in er billig og elektrikerfritt HVIS det finnes stikk å nå (henger sammen med stikkontakt-beslutningen under). Kabler skjules bak gesims/foring — planlegg føringsvei FØR montering. Og mål downlight-avstand mot overdelens forkant (28 cm BILLY ligger ~2 cm bak downlights på 30 cm).",
   },
   {
     id: "stikkontakt",
@@ -134,11 +142,12 @@ export const DECISIONS: Decision[] = [
   },
   {
     id: "innmat",
-    title: "Ekstra hyller inni METOD-baseskapene",
+    title: "Hyller inni METOD-baseskapene",
     phase: "2 · Før montering",
-    status: "åpen",
+    status: "avgjort",
     owner: "Familien",
-    recommendation: "Under research (hva følger med stammen?). Kan ettermonteres — ikke kritisk for bestillingen.",
+    recommendation:
+      "Verifisert: stammene leveres HELT uten hyller. 1 UTRUSTA-hylleplate per 60-høy stamme (190/155/135 kr etter bredde) er nå lagt i delelistene (860 kr for 340-basen). Flere kan ettermonteres.",
   },
   {
     id: "gulvlist",

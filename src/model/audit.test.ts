@@ -5,34 +5,39 @@ import { bestCombo, planWidth, widthSweep, BASE_WIDTHS, BILLY_WIDTHS, BOHUS_WIDT
 
 /** Hand-audited totals (NOK), computed independently of the code:
  *  Base  = frames 3×499+455+429 (2381) + doors 7×300+460 (2560)
- *        + legs 10 packs × 75 (750) + EKBACKEN 4 m × 995 (3980) = 9671
- *  V1 = 9671 + 4×1899                    = 17267
- *  V2 = 9671 + 10×545 + 5×495           = 17596
- *  V3 = 9671 + 4×895 + 4×180            = 13971
- *  V4 = 9671 + 8×545 + 2×335            = 14701
- *  V5 = 9671 + 6×1050 + 4×1260 + 5×1150 = 26761
- *  Unverified share: doors 2560 + top 3980 = 6540 (V4 also 2×335 → 7210) */
-/** Low bench (V6/V7): frames 4×455 (1820) + VEDDINGE doors 8×230 (1840)
- *  + legs 8 packs × 75 (600) + EKBACKEN 4 m (3980) = 8240.
- *  V6 = 8240 + 4×(895+180) = 12540; V7 = 8240 + 4×1899 = 15836.
- *  Unverified: doors 1840 + top 3980 = 5820. */
-/** V3 widths, same arithmetic per width (frames/doors/legs/top + BILLY units):
- *  300: 1952+2260+600+2985 (base 7797) + 3×1075+795 (4020) = 11817
- *  320: 1996+2400+600+3980 (base 8976) + 4×1075 (4300)     = 13276
- *  360: 2425+2700+750+3980 (base 9855) + 4×1075+795 (5095) = 14950 */
+ *        + legs 10 packs × 75 (750) + EKBACKEN 4 m × 995 (3980)
+ *        + hinges 8 pk × 195 (1560) + knobs 4 pk × 90 (360)
+ *        + UTRUSTA-hyller 3×190+155+135 (860)                  = 12451
+ *  V1 = 12451 + 4×1899                    = 20047
+ *  V2 = 12451 + 10×545 + 5×495            = 20376
+ *  V3 = 12451 + 4×895 + 4×180             = 16751
+ *  V4 = 12451 + 8×545 + 2×335             = 17481
+ *  V5 = 12451 + 6×1050 + 4×1260 + 5×1150  = 29541
+ *  V8 = 12451 + 8×1030 + 2×285            = 21261
+ *  Low bench: 1820 frames + 1840 doors + 600 legs + 3980 top
+ *  + 1560 hinges + 360 knobs = 10160 → V6 +4300 = 14460, V7 +7596 = 17756. */
+/** V3 widths, same arithmetic (frames/doors/legs/top/hardware + BILLY units).
+ *  Hardware per base = hinge packs (doors×195) + knob packs (ceil(doors/2)×90)
+ *  + one UTRUSTA shelf per frame:
+ *  300 (7 doors, 3×80+60): 7797 + 1365+360+725 (2450) + 4020 = 14267
+ *  320 (8 doors, 4×80):    8976 + 1560+360+760 (2680) + 4300 = 15956
+ *  340 (8 doors):         12451                       + 4300 = 16751
+ *  360 (9 doors, 4×80+40): 9855 + 1755+450+895 (3100) + 5095 = 18050
+ *  Unverified share is now only the worktop (3980; 2985 at 300 cm) after
+ *  STENSUND/VEDDINGE page-verification; V4 adds 2×335 unverified 20-frames. */
 const EXPECTED: Record<string, { total: number; unverified: number }> = {
-  "v1-bohus": { total: 17267, unverified: 6540 },
-  "v2-besta": { total: 17596, unverified: 6540 },
-  "v3-billy-300": { total: 11817, unverified: 5245 },
-  "v3-billy-320": { total: 13276, unverified: 6380 },
-  "v3-billy": { total: 13971, unverified: 6540 },
-  "v3-billy-360": { total: 14950, unverified: 6680 },
-  "v4-metod": { total: 14701, unverified: 7210 },
-  "v5-string": { total: 26761, unverified: 6540 },
-  "v6-lavbenk-billy": { total: 12540, unverified: 5820 },
-  "v7-lavbenk-bohus": { total: 15836, unverified: 5820 },
-  // V8 = base 9671 + 8× BBB SR2-83 (8240) + 2 endesider (570) = 18481
-  "v8-bbb": { total: 18481, unverified: 6540 },
+  "v1-bohus": { total: 20047, unverified: 3980 },
+  "v2-besta": { total: 20376, unverified: 3980 },
+  "v3-billy-300": { total: 14267, unverified: 2985 },
+  "v3-billy-320": { total: 15956, unverified: 3980 },
+  "v3-billy": { total: 16751, unverified: 3980 },
+  "v3-billy-360": { total: 18050, unverified: 3980 },
+  "v4-metod": { total: 17481, unverified: 4650 },
+  "v5-string": { total: 29541, unverified: 3980 },
+  "v6-lavbenk-billy": { total: 14460, unverified: 3980 },
+  "v7-lavbenk-bohus": { total: 17756, unverified: 3980 },
+  // V8 = base 12451 + 8× BBB SR2-83 (8240) + 2 endesider (570) = 21261
+  "v8-bbb": { total: 21261, unverified: 3980 },
 };
 
 describe("cost audit (hand-computed expectations)", () => {

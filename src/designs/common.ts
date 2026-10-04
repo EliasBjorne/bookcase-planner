@@ -110,16 +110,39 @@ export function metodBase(
   );
 
   const doorQty = new Map<string, number>();
+  let totalDoors = 0;
   for (const w of frameWidths) {
     const d = DOOR_FOR_FRAME_H600[w];
     doorQty.set(d.itemId, (doorQty.get(d.itemId) ?? 0) + d.doors);
+    totalDoors += d.doors;
+  }
+  const shelfQty = new Map<string, number>();
+  for (const w of frameWidths) {
+    const id = SHELF_FOR_FRAME[w];
+    shelfQty.set(id, (shelfQty.get(id) ?? 0) + 1);
   }
   const extraParts: ExtraPart[] = [
     { itemId: "metod-leg-8cm-2pk", qty: frameWidths.length * 4, label: "METOD ben (4 per skrog)" },
     ...[...doorQty.entries()].map(([itemId, qty]) => ({ itemId, qty, label: "Dører" })),
+    ...doorHardware(totalDoors),
+    ...[...shelfQty.entries()].map(([itemId, qty]) => ({ itemId, qty, label: "Hylle i stamme (leveres uten)" })),
   ];
 
   return { modules, extraParts };
+}
+
+export const SHELF_FOR_FRAME: Record<number, string> = {
+  800: "utrusta-shelf-80x37",
+  600: "utrusta-shelf-60x37",
+  400: "utrusta-shelf-40x37",
+};
+
+/** Hinges (2 per door, sold separately!) + brass knobs (1 per door). */
+export function doorHardware(doorCount: number): ExtraPart[] {
+  return [
+    { itemId: "utrusta-hinge-2pk", qty: doorCount * 2, label: "Hengsler (2 per dør — følger IKKE med)" },
+    { itemId: "bagganas-knob-brass-2pk", qty: doorCount, label: "Messingknotter" },
+  ];
 }
 
 /** Low bench (benk i sittehøyde, som livingetc-METOD-hacken): 4× METOD
@@ -182,6 +205,8 @@ export function metodBaseLow(): { modules: Module[]; extraParts: ExtraPart[] } {
     extraParts: [
       { itemId: "metod-leg-8cm-2pk", qty: 16, label: "METOD ben (4 per skrog)" },
       { itemId: "veddinge-door-40x40", qty: 8, label: "Dører (glatte — shaker finnes ikke i 40-høyde)" },
+      ...doorHardware(8),
+      // 40-høye stammer: ett rom, ingen ekstra hylle.
     ],
   };
 }

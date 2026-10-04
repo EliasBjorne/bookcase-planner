@@ -2,6 +2,7 @@ import { getItem, priceFor } from "./catalogue";
 import {
   DOOR_FOR_FRAME_H600 as DOOR_FOR_FRAME,
   FRAME_ITEM_H600 as FRAME_ITEM,
+  SHELF_FOR_FRAME,
 } from "../designs/common";
 
 /** Width-sweep solver: for a target unit width, find the best arrangement of
@@ -96,6 +97,12 @@ export function planWidth(targetMm: number): WidthPlan {
   const legsCost = priceFor("metod-leg-8cm-2pk", base.widths.length * 4).priceNok ?? 0;
   // EKBACKEN custom-cut: priced per started length-metre.
   const topCost = Math.ceil(targetMm / 1000) * (getItem("ekbacken-custom-top").priceNok ?? 0);
+  // Hinges (2/door) + brass knobs (1/door) + one UTRUSTA shelf per frame.
+  const totalDoors = base.widths.reduce((s, w) => s + DOOR_FOR_FRAME[w].doors, 0);
+  const hardwareCost =
+    (priceFor("utrusta-hinge-2pk", totalDoors * 2).priceNok ?? 0) +
+    (priceFor("bagganas-knob-brass-2pk", totalDoors).priceNok ?? 0) +
+    base.widths.reduce((s, w) => s + (getItem(SHELF_FOR_FRAME[w]).priceNok ?? 0), 0);
 
   // Each 80 cm BILLY gets one extra shelf (as in V3); 40 cm BILLY priced plain.
   const billyCostFull = billy.widths.reduce(
@@ -110,7 +117,7 @@ export function planWidth(targetMm: number): WidthPlan {
 
   const bohusCost = bohus.widths.length * (getItem("bohus-base-bokhylle-80").priceNok ?? 0);
 
-  const baseTotal = baseFrameCost + baseDoorCost + legsCost + topCost;
+  const baseTotal = baseFrameCost + baseDoorCost + legsCost + topCost + hardwareCost;
   const notes: string[] = [];
   if (base.fillerMm > 300) notes.push(`Base: ${base.fillerMm} mm foring totalt — mye, vurder annen bredde`);
   if (billy.fillerMm > 300) notes.push(`BILLY: ${billy.fillerMm} mm foring totalt`);

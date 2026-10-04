@@ -32,7 +32,7 @@ export function decisionsHtml(): string {
   return `
   <h2>Beslutninger (${open} åpne)</h2>
   <p class="design-desc">Alt som må avgjøres for at dette skal bli vellykket — gruppert etter når
-  det må avgjøres, og hvem som eier det. Forskningsavhengige punkter oppdateres når
-  front/beslag-researchen lander.</p>
+  det må avgjøres, og hvem som eier det. Front-, beslag- og belysningspunktene er
+  underbygget av verifisert research (docs/fronts.md).</p>
   <div class="decisions" data-testid="decisions-list">${sections}</div>`;
 }
