@@ -7,8 +7,17 @@ import { compareHtml } from "./views/compare";
 import { handoffHtml, wireHandoff } from "./views/handoff";
 import { renderHtml, wireRender } from "./views/render";
 import { widthsHtml } from "./views/widths";
+import { decisionsHtml } from "./views/decisions";
 
-type ViewId = "3d" | "render" | "tegning" | "deler" | "handoff" | "sammenlikn" | "bredder";
+type ViewId =
+  | "3d"
+  | "render"
+  | "tegning"
+  | "deler"
+  | "handoff"
+  | "sammenlikn"
+  | "bredder"
+  | "beslutninger";
 
 const VIEWS: { id: ViewId; label: string }[] = [
   { id: "3d", label: "3D" },
@@ -18,6 +27,7 @@ const VIEWS: { id: ViewId; label: string }[] = [
   { id: "handoff", label: "IKEA-overlevering" },
   { id: "sammenlikn", label: "Sammenlikn alle" },
   { id: "bredder", label: "Bredder 300–360" },
+  { id: "beslutninger", label: "Beslutninger" },
 ];
 
 const content = document.getElementById("content")!;
@@ -39,7 +49,7 @@ function render(): void {
   const { designId, view } = parseHash();
   const design = DESIGNS.find((d) => d.id === designId)!;
 
-  const globalView = view === "sammenlikn" || view === "bredder";
+  const globalView = view === "sammenlikn" || view === "bredder" || view === "beslutninger";
   designNav.innerHTML = DESIGNS.map(
     (d) =>
       `<a href="#/${d.id}/${globalView ? "3d" : view}" class="${d.id === designId && !globalView ? "active" : ""}" data-testid="nav-${d.id}">${d.name}</a>`,
@@ -94,6 +104,10 @@ function render(): void {
     }
     case "bredder": {
       content.innerHTML = widthsHtml();
+      break;
+    }
+    case "beslutninger": {
+      content.innerHTML = decisionsHtml();
       break;
     }
   }

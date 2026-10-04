@@ -73,6 +73,16 @@ test("width explorer lists 7 widths with exact-fit notes", async ({ page }) => {
   await page.screenshot({ path: "docs/screenshots/bredder.png", fullPage: true });
 });
 
+test("decisions checklist renders grouped by phase", async ({ page }) => {
+  await page.goto(`/#/v3-billy/beslutninger`);
+  const list = page.getByTestId("decisions-list");
+  await expect(list).toBeVisible();
+  await expect(list).toContainText("Frontstrategi");
+  await expect(list).toContainText("Hengsler");
+  await expect(list).toContainText("På stedet");
+  await page.screenshot({ path: "docs/screenshots/beslutninger.png", fullPage: true });
+});
+
 test("no hard validation errors in any variant", async ({ page }) => {
   for (const id of DESIGNS) {
     await page.goto(`/#/${id}/deler`);
