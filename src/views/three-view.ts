@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Design } from "../model/types";
+import { doorProfileParts } from "./door-geometry";
 
 /** 3D preview. Scene units = metres; origin at the left wall corner, floor level. */
 export class ThreeView {
@@ -165,23 +166,13 @@ export class ThreeView {
             (m.z + m.d + 9) / 1000,
           );
           this.designGroup.add(door);
-          // Raised rails/stiles so shaker/bevel/country profiles read in 3D.
-          if (style !== "flat" && style !== "gloss") {
-            const fw = Math.min(dw * 0.14, 70);
-            const zf = m.z + m.d + 18 + 3.5;
-            const cx = m.x + (i + 0.5) * dw;
-            const parts: [number, number, number, number][] = [
-              // [w, h, xOffset, yCenter]
-              [dw - 6, fw, 0, m.y + m.h - fw / 2 - 3],
-              [dw - 6, fw, 0, m.y + fw / 2 + 3],
-              [fw, m.h - 6, -(dw - fw) / 2 + 3, m.y + m.h / 2],
-              [fw, m.h - 6, (dw - fw) / 2 - 3, m.y + m.h / 2],
-            ];
-            for (const [w2, h2, dx, yc] of parts) {
-              const strip = this.box(w2, h2, 7, m.doorColorHex ?? "#bcb09c");
-              strip.position.set((cx + dx) / 1000, yc / 1000, zf / 1000);
-              this.designGroup.add(strip);
-            }
+          // Profile parts shared with the Foto scene (shaker/bevel/country).
+          const cx = m.x + (i + 0.5) * dw;
+          const slabFront = m.z + m.d + 18;
+          for (const p of doorProfileParts(dw - 6, m.h - 6, style)) {
+            const strip = this.box(p.w, p.h, p.t, m.doorColorHex ?? "#bcb09c");
+            strip.position.set((cx + p.dx) / 1000, (m.y + m.h / 2 + p.dy) / 1000, (slabFront + p.dz) / 1000);
+            this.designGroup.add(strip);
           }
           if (m.doorKnobs ?? true) {
             const knob = new THREE.Mesh(

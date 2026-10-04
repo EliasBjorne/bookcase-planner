@@ -2,6 +2,7 @@ import * as THREE from "three";
 import type { Design } from "../model/types";
 import { SPINES, hash, mulberry32 } from "../model/rand";
 import { shade } from "../model/color";
+import { doorProfileParts } from "./door-geometry";
 
 /** Physically-based scene for the Foto view: the exact design geometry with
  * PBR materials, emissive light sources (window panel + downlights) and
@@ -206,13 +207,11 @@ export function buildPhotoScene(d: Design, forRaster: boolean): PhotoScene {
       const dw = m.w / m.doors;
       for (let i = 0; i < m.doors; i++) {
         box(g, dw - 5, m.h - 5, 18, doorMat, m.x + (i + 0.5) * dw, m.y + m.h / 2, m.z + m.d + 9);
-        if (m.doorStyle && m.doorStyle !== "flat" && m.doorStyle !== "gloss") {
-          // Raised rails/stiles hint at the profile.
-          const fw = dw * 0.13;
-          box(g, dw - 5, fw * 0.9, 6, doorMat, m.x + (i + 0.5) * dw, m.y + m.h - fw * 0.5, m.z + m.d + 21);
-          box(g, dw - 5, fw * 0.9, 6, doorMat, m.x + (i + 0.5) * dw, m.y + fw * 0.5, m.z + m.d + 21);
-          box(g, fw * 0.9, m.h - 5, 6, doorMat, m.x + i * dw + fw * 0.55, m.y + m.h / 2, m.z + m.d + 21);
-          box(g, fw * 0.9, m.h - 5, 6, doorMat, m.x + (i + 1) * dw - fw * 0.55, m.y + m.h / 2, m.z + m.d + 21);
+        // Profile parts shared with the 3D view (shaker/bevel/country).
+        const cx = m.x + (i + 0.5) * dw;
+        const slabFront = m.z + m.d + 18;
+        for (const p of doorProfileParts(dw - 5, m.h - 5, m.doorStyle ?? "shaker")) {
+          box(g, p.w, p.h, p.t, doorMat, cx + p.dx, m.y + m.h / 2 + p.dy, slabFront + p.dz);
         }
         if (m.doorKnobs ?? true) {
           const knob = new THREE.Mesh(
