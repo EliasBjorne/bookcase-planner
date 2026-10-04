@@ -20,14 +20,16 @@ export interface Setup {
   lighting: "none" | "spots6" | "spots9";
 }
 
+/** The family's chosen setup (2026-10-04): what the wizard and «Din løsning»
+ * open with for anyone without their own saved choices. */
 export const DEFAULT_SETUP: Setup = {
-  widthMm: 3400,
+  widthMm: 3200,
   bench: "high",
   uppers: "billy",
-  front: "stensund-hvit",
-  color: "greige",
-  knobs: "bagganas-messing",
-  top: "ekbacken",
+  front: "bodbyn-offwhite",
+  color: "linen",
+  knobs: "hamphult-eik",
+  top: "mdf-painted",
   lighting: "none",
 };
 

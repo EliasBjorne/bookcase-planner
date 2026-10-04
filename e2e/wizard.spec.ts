@@ -6,20 +6,20 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
 });
 
-test("wizard is the landing page with the audited default total", async ({ page }) => {
+test("wizard is the landing page with the family-default total", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("wizard")).toBeVisible();
-  await expect(page.getByTestId("wizard-total")).toContainText(/16.?751/);
+  await expect(page.getByTestId("wizard-total")).toContainText(/12.?716/); // audited family default
   await page.screenshot({ path: "docs/screenshots/wizard-step0.png" });
 });
 
 test("choices update the live total and preview", async ({ page }) => {
   await page.goto("/#/bygg/0");
-  await page.getByTestId("opt-3200").click();
-  await expect(page.getByTestId("wizard-total")).toContainText(/15.?956/); // audited 320-total
+  await page.getByTestId("opt-3400").click();
+  await expect(page.getByTestId("wizard-total")).toContainText(/13.?556/); // 340-base w/ BODBYN+HAMPHULT+snekkerplate
   await page.goto("/#/bygg/2");
   await page.getByTestId("opt-bbb").click();
-  await expect(page.getByTestId("wizard-total")).toContainText(/20.?466/); // 15956 - billy(4300) + bbb(8240+570)
+  await expect(page.getByTestId("wizard-total")).toContainText(/18.?066/); // 13556 - billy(4300) + bbb(8810)
 });
 
 test("front step shows the whole METOD range and changes the drawn door", async ({ page }) => {
@@ -27,12 +27,12 @@ test("front step shows the whole METOD range and changes the drawn door", async 
   // At least 15 series + Noremax, each with a door thumbnail.
   expect(await page.locator(".opt-card").count()).toBeGreaterThan(15);
   expect(await page.locator(".door-thumb").count()).toBeGreaterThan(15);
-  // Default STENSUND renders shaker doors in the preview...
-  await expect(page.getByTestId("wizard-preview").locator('[data-door-style="shaker"]').first()).toBeVisible();
-  // ...switching to BODBYN svart redraws them as bevel...
-  await page.getByTestId("opt-bodbyn-svart").click();
+  // Default BODBYN renders bevel doors in the preview...
   await expect(page.getByTestId("wizard-preview").locator('[data-door-style="bevel"]').first()).toBeVisible();
-  await expect(page.getByTestId("wizard-total")).toContainText(/17.?516/); // 16751+765
+  // ...switching to STENSUND redraws them as shaker...
+  await page.getByTestId("opt-stensund-hvit").click();
+  await expect(page.getByTestId("wizard-preview").locator('[data-door-style="shaker"]').first()).toBeVisible();
+  await expect(page.getByTestId("wizard-total")).toContainText(/11.?996/); // 12716 − 3120 + 2400
   // ...and a foil front keeps its factory colour in the preview markup.
   await page.getByTestId("opt-nickebo-antrasitt").click();
   await expect(page.getByTestId("wizard-preview").locator('[data-door-style="flat"]').first()).toBeVisible();
@@ -45,15 +45,16 @@ test("knob step: many real options, photo under the illustration, price reacts",
   expect(await page.locator(".opt-card img.opt-photo").count()).toBeGreaterThan(7);
   await expect(page.getByTestId("real-photo").locator("img")).toBeVisible();
   await page.getByTestId("opt-gubbarp-hvit").click();
-  await expect(page.getByTestId("wizard-total")).toContainText(/16.?431/);
+  await expect(page.getByTestId("wizard-total")).toContainText(/12.?376/); // 12716 − 380 + 40
   await page.screenshot({ path: "docs/screenshots/wizard-knobs.png", fullPage: true });
 });
 
 test("front step shows the real product photo of the selected door", async ({ page }) => {
   await page.goto("/#/bygg/3");
   await expect(page.getByTestId("real-photo").locator("img")).toBeVisible();
-  await page.getByTestId("opt-bodbyn-offwhite").click();
-  await expect(page.getByTestId("real-photo")).toContainText("BODBYN offwhite");
+  await expect(page.getByTestId("real-photo")).toContainText("BODBYN offwhite"); // family default
+  await page.getByTestId("opt-lerhyttan-lysgra").click();
+  await expect(page.getByTestId("real-photo")).toContainText("LERHYTTAN lys grå");
 });
 
 test("lighting choice shows glow in the illustration and the MITTLED photo", async ({ page }) => {
@@ -70,7 +71,9 @@ test("CORRECTED: shaker stays available on the low bench", async ({ page }) => {
   await page.goto("/#/bygg/3");
   await expect(page.getByTestId("opt-stensund-hvit")).toBeEnabled();
   await page.getByTestId("opt-stensund-hvit").click();
-  await expect(page.getByTestId("wizard-total")).toContainText(/14.?700/); // audited low+shaker
+  // Low base 1820 + STENSUND 40×40 2080 + legs 600 + hinges 1560 + HAMPHULT 380
+  // + snekkerplate 0 + BILLY 4300 = 10 740.
+  await expect(page.getByTestId("wizard-total")).toContainText(/10.?740/);
 });
 
 test("full walkthrough reaches result with tabs, parts and share link", async ({ page }) => {
@@ -87,7 +90,7 @@ test("full walkthrough reaches result with tabs, parts and share link", async ({
   await page.screenshot({ path: "docs/screenshots/din-result.png", fullPage: true });
 
   await page.getByTestId("view-deler").click();
-  await expect(page.locator("tfoot")).toContainText(/16.?751/);
+  await expect(page.locator("tfoot")).toContainText(/12.?716/);
   await expect(page.getByTestId("share-link")).toBeVisible();
 });
 

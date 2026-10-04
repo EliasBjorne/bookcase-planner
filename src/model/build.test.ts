@@ -4,7 +4,20 @@ import { DEFAULT_SETUP, decodeSetup, encodeSetup, type Setup } from "./setup";
 import { partsList } from "./cost";
 import { validate } from "./validate";
 
-const setup = (over: Partial<Setup>): Setup => ({ ...DEFAULT_SETUP, ...over });
+/** Audit baseline (NOT the app default): the configuration the hand-computed
+ * expectations below were derived from. The app default is the family's pick
+ * and has its own audit test. */
+const BASE: Setup = {
+  widthMm: 3400,
+  bench: "high",
+  uppers: "billy",
+  front: "stensund-hvit",
+  color: "greige",
+  knobs: "bagganas-messing",
+  top: "ekbacken",
+  lighting: "none",
+};
+const setup = (over: Partial<Setup>): Setup => ({ ...BASE, ...over });
 
 /** The generator must reproduce the hand-audited preset totals exactly —
  * two independent code paths agreeing (see audit.test.ts arithmetic). */
@@ -29,6 +42,12 @@ describe("buildDesign ≡ preset audits", () => {
 });
 
 describe("option price effects (hand-computed)", () => {
+  it("the family default (320/BODBYN/lin/HAMPHULT/snekkerplate) = 12 716 kr", () => {
+    // frames 4×499 (1996) + BODBYN 8×390 (3120) + legs 8pk (600) + mdf-top (0)
+    // + hinges 8pk (1560) + HAMPHULT 4pk (380) + shelves 4×190 (760) + BILLY 4300
+    expect(partsList(buildDesign(DEFAULT_SETUP)).totalNok).toBe(12716);
+  });
+
   it("Beslag Design knobs: −360 +8×185 → +1120", () => {
     expect(partsList(buildDesign(setup({ knobs: "beslag-uno" }))).totalNok).toBe(16751 + 1120);
   });
